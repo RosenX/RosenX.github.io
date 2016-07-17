@@ -5,9 +5,9 @@
 # Site
 title: Rosen
 subtitle: 
-description: 学习总结
+description: 一些学习上的总结与思考
 author: Rosen
-language:
+language: zh-Hans
 timezone:
 since: 2016
 
@@ -72,7 +72,7 @@ archive_generator:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: even
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -80,3 +80,5 @@ deploy:
   type: git
   repository: https://github.com/RosenX/rosenx.github.io.git
   branch: master
+
+duoshuo_share: true
