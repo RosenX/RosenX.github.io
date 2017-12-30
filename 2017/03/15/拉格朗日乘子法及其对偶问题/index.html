@@ -1,0 +1,928 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Playball:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数学,最优化,拉格朗日,对偶," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="机器学习算法中经常使用拉格朗日乘子法求解最优化问题，如PCA，SVM等。有时候还会用到拉格朗日的对偶问题（SVM中通过求解对偶问题得到原始问题的解）。这几天看了周志华西瓜书的附录和凸优化这本书的相关章节，现对拉格朗日及其对偶问题总结如下。">
+<meta name="keywords" content="数学,最优化,拉格朗日,对偶">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拉格朗日乘子法及其对偶问题">
+<meta property="og:url" content="http://rosen.xyz/2017/03/15/拉格朗日乘子法及其对偶问题/index.html">
+<meta property="og:site_name" content="Rosen">
+<meta property="og:description" content="机器学习算法中经常使用拉格朗日乘子法求解最优化问题，如PCA，SVM等。有时候还会用到拉格朗日的对偶问题（SVM中通过求解对偶问题得到原始问题的解）。这几天看了周志华西瓜书的附录和凸优化这本书的相关章节，现对拉格朗日及其对偶问题总结如下。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://rosen.xyz/2017/03/15/拉格朗日乘子法及其对偶问题/grad.jpg">
+<meta property="og:image" content="http://rosen.xyz/2017/03/15/拉格朗日乘子法及其对偶问题/contour.jpg">
+<meta property="og:updated_time" content="2017-12-30T13:16:06.462Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拉格朗日乘子法及其对偶问题">
+<meta name="twitter:description" content="机器学习算法中经常使用拉格朗日乘子法求解最优化问题，如PCA，SVM等。有时候还会用到拉格朗日的对偶问题（SVM中通过求解对偶问题得到原始问题的解）。这几天看了周志华西瓜书的附录和凸优化这本书的相关章节，现对拉格朗日及其对偶问题总结如下。">
+<meta name="twitter:image" content="http://rosen.xyz/2017/03/15/拉格朗日乘子法及其对偶问题/grad.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://rosen.xyz/2017/03/15/拉格朗日乘子法及其对偶问题/"/>
+
+  <title> 拉格朗日乘子法及其对偶问题 | Rosen </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?1613fa01ed708dc95bd2f373215ba3b4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Rosen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                拉格朗日乘子法及其对偶问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-15T19:15:24+08:00" content="2017-03-15">
+              2017-03-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/03/15/拉格朗日乘子法及其对偶问题/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/15/拉格朗日乘子法及其对偶问题/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/03/15/拉格朗日乘子法及其对偶问题/" class="leancloud_visitors" data-flag-title="拉格朗日乘子法及其对偶问题">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>机器学习算法中经常使用拉格朗日乘子法求解最优化问题，如PCA，SVM等。有时候还会用到拉格朗日的对偶问题（SVM中通过求解对偶问题得到原始问题的解）。这几天看了周志华西瓜书的附录和凸优化这本书的相关章节，现对拉格朗日及其对偶问题总结如下。</p>
+<a id="more"></a>
+<h2 id="拉格朗日函数及KKT条件"><a href="#拉格朗日函数及KKT条件" class="headerlink" title="拉格朗日函数及KKT条件"></a>拉格朗日函数及KKT条件</h2><p>优化问题都可以化成以下标准形式：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+min &\,\,\,\,\,f(x) \\\
+s.t.   &\,\,\,\,\,h_i(x)=0 &i=1,2,3,\cdots,p  \\\
+&\,\,\,\,\,g_j(x)\le 0&j=1,2,3,\cdots,q
+\end{align}\tag{1}</script><p>为简化问题，现将等式约束和不等式约束分开考虑</p>
+<h3 id="一个等式约束"><a href="#一个等式约束" class="headerlink" title="一个等式约束"></a>一个等式约束</h3><p>在高维空间中，一组等式约束确定的是一个超平面。假如只有一个等式约束$h(x)=0$，原始空间维数是$n$，则$h(x)=0$确定的就是一个$n-1$维的超平面。假设只有一个等式约束。即：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+min \,\,\,\,&f(x) \\\
+s.t.   \,\,\,\,& h(x)=0
+\end{align}\tag{2}</script><p>那么，存在一下两条性质：</p>
+<ol>
+<li>点$x$在超平面$h(x)=0$上的梯度方向垂直于超平面方向</li>
+<li>如果$f(x)$的最优值在$x^*$处取得，则$f(x)$在该点的梯度必垂直与超平面$h(x)=0$</li>
+</ol>
+<p>要理解第一点，需要理解梯度的概念，梯度指明了一个方向，沿着这个方向走函数值上升最快。假如我们的函数是$f(x) = (x_1- 2)^2+x_2^2$，函数梯度是$\frac{\partial f(x)}{\partial x} = [\frac{\partial f(x)}{\partial x_1}, \frac{\partial f(x)}{\partial x_2}]^{\mathrm T}=[2(x_1-2), 2x_2]^{\mathrm T}$，即梯度向量与圆心$(2, 0)$到$(x_1,x_2)$的向量平行，所以任意一点的梯度在该点处与圆垂直。</p>
+<p>下面图形可方便理解：</p>
+<p><img src="./grad.jpg" alt="性质1解释"></p>
+<p>这个图形中一圈一圈的是等值线，越往外函数值越大，在$(2,1)$这个点，求得的梯度是$(0,2)^{\mathrm T}$，垂直于圆，沿着$(0,2)^{\mathrm T}$这个方向函数值上升最快。</p>
+<p>对于第二点，我们假设我们的超平面是二维平面上的一条直线$h(x)=x_1+x_2+\sqrt2=0$，我们的目标函数$f(x) =x_1^2+x_2^2$，则可以得到以下图形：</p>
+<p><img src="./contour.jpg" alt="性质2解释"></p>
+<p>$f(x)$在直线与圆相切时的切点处取得最小值，这是直线的梯度方向如红色箭头所示，圆的梯度如蓝色箭头所示。</p>
+<p>通过以上两条性质我们可知，当函数在超平面$h(x)=0$ 上一点$x^\ast$处取得最小值时，$\nabla f(x^\ast)$ 与 $\nabla h(x^\ast)$方向相反或相同，如果用数学的语言来描述这个结论就是，存在一个$\lambda$，使得：</p>
+<script type="math/tex; mode=display">
+\nabla f(x^\ast)+\lambda \nabla h(x^\ast)=0 \tag{3}</script><p>我们定义拉格朗日函数：</p>
+<script type="math/tex; mode=display">
+L(x,\lambda)=f(x)+\lambda g(x) \tag{4}</script><p>上述等式实际上就是：</p>
+<script type="math/tex; mode=display">
+\frac{\partial L(x,\lambda)}{\partial x}=\nabla f(x)+\lambda \nabla h(x)=0 \tag{5}</script><p>如果再对$\lambda$求偏导并令其等于0，实际就得到了原始的等式约束：</p>
+<script type="math/tex; mode=display">
+\frac{\partial L(x,\lambda)}{\partial \lambda}=h(x)=0 \tag{6}</script><p>所以等式约束问题(1)可以通过联立(5)(6)求解</p>
+<h3 id="多个等式约束"><a href="#多个等式约束" class="headerlink" title="多个等式约束"></a>多个等式约束</h3><p>当存在多个等式约束时，拉格朗日函数定义为：</p>
+<script type="math/tex; mode=display">
+L(x,\lambda)=f(x)+\sum_i{\lambda_ih_i(x)}\tag{7}</script><p>它对$x$求偏导后有：</p>
+<script type="math/tex; mode=display">
+\frac{\partial L(x, \lambda)}{\partial x}=\nabla f(x)+\sum_i{\lambda_i\nabla h_i(x)}=0 \tag{8}</script><p>(8)和(5)虽然看起来不一样，但同样可以用解释(5)的方式来解释(8)。<strong>实际上，每个等式确定的超平面梯度方向的加和必定与多个等式确定的超平面垂直。</strong>我们可以举个简单例子来验证这一点，比如我们有两个等式，两个等式确定的平面都是一个二维面，那么这两个等式联合确定的超平面就是条直线，由高中知识（不知道的去翻书）可知，这条直线垂直于这两个平面的法向量所确定的平面。</p>
+<p>也就是说多个等式约束问题，同样可以通过联立方程来解。</p>
+<h3 id="不等式约束"><a href="#不等式约束" class="headerlink" title="不等式约束"></a>不等式约束</h3><p>假设只有不等式约束：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+min \,\,\,\,&f(x) \\\
+s.t.   \,\,\,\,& g_j(x)\le 0&j=1,2,3,\cdots,q
+\end{align}\tag{9}</script><p>其拉格朗日函数形式是：</p>
+<script type="math/tex; mode=display">
+L(x,\mu)=f(x)+\sum_j\mu_jg_j(x) \tag{10}</script><p>多个不等式构成的可行域不再是一个超平面，而是一个体。这样的话令$f(x)$取最优的点$x^{\ast}$有两种情况：</p>
+<ol>
+<li>$x^{\ast}$出现在体中</li>
+<li>$x^{\ast}$出现在体表面上</li>
+</ol>
+<p>如果$x^{\ast}$出现在体中，因为对于体中的任意一点$x$，都有$g_i(x)&lt;0$，故约束不起作用，所以函数$f(x)$的最优值可以直接通过求导得到，即可令$\mathbf{\mu} = \mathbf 0$，然后然后令$\nabla L(x,\mu)=0$求得。</p>
+<p>如果$x^{\ast}$出现在体的表面上，则必有一个或多个（如果$x^\ast$出现在交点处）不等式等号成立，其他等号不成立，对于等号成立的部分，问题转化成等式约束问题，对于等号不成立的部分，约束条件可以忽略。</p>
+<p>对于等式成立的部分，$\mu$一定大于0，即$f(x)$在$x^\ast$处的梯度方向与超平面在$x^\ast$处的方向相反，为什么？</p>
+<p><strong>因为梯度的方向是函数值升高的方向，所以超平面的梯度方向一定向外（体内$g_i(x) &lt; 0$，体表$g_i(x) = 0$），而$f(x)$的梯度一定向里， 因为$x^\ast$在体表取得，体内$f(x) &gt; f(x^\ast)$</strong></p>
+<p>综上两种情况有：</p>
+<script type="math/tex; mode=display">
+\begin{cases}
+\mu_i \ge 0\\\
+g_i(x) \le0\\\
+\mu_ig_i(x)=0
+\end{cases} \tag{11}</script><h3 id="KKT-条件"><a href="#KKT-条件" class="headerlink" title="KKT 条件"></a>KKT 条件</h3><p>前两节我们分别对等式和不等式进行了分析，现在我们考虑这两种约束都存在的情况。对于标准形式的优化问题（1），拉格朗日函数为：</p>
+<script type="math/tex; mode=display">
+L(x,\lambda,\mu)= f(x) + \sum_{i=1}^{p} \lambda_i h_i(x) + \sum_{j=1}^{q} \mu_j g_i(x) \tag{12}</script><p>则优化问题（1）取得最优值时须满足KKT最优性条件：</p>
+<script type="math/tex; mode=display">
+\begin{cases}
+\nabla L(x^\ast, \lambda,\mu)=\nabla f(x^\ast)  + \sum_{i = 1}^{p}  \lambda_i\nabla h_i(x^\ast) + \sum_{j=1}^{q} \mu_j \nabla g_i(x^\ast)=0\\\
+h_i(x^\ast) = 0\\\
+\mu_j \ge 0 \\\
+g_j(x) \le 0\\\
+\mu_jg_j(x) = 0
+\end{cases} \tag{13}</script><h2 id="拉格朗日对偶"><a href="#拉格朗日对偶" class="headerlink" title="拉格朗日对偶"></a>拉格朗日对偶</h2><h3 id="对偶函数的定义"><a href="#对偶函数的定义" class="headerlink" title="对偶函数的定义"></a>对偶函数的定义</h3><p>对于式（12）所示的拉格朗日函数，其对偶函数定义为：</p>
+<script type="math/tex; mode=display">
+g(\lambda,\mu)=\mathrm{inf}_x ~L(x,\lambda, \mu) = \mathrm {inf} _x~ \lbrace f(x)+\sum_{i=1}^{p} \lambda_i h_i(x)+\sum_{j=1}^q \mu_j g_j(x) \rbrace \tag{14}</script><p>其中$\mathrm {inf}$表示下界的意思。因为$h_i(x)=0$，$g_j(x) \le 0$，故对于$\mu \ge0,\,\lambda$总有：</p>
+<script type="math/tex; mode=display">
+g(\lambda,\mu) \le f(x^\ast) \le f(x) \tag{15}</script><p>即对偶函数给出了问题(1)的一个下界。</p>
+<h3 id="对偶问题定义"><a href="#对偶问题定义" class="headerlink" title="对偶问题定义"></a>对偶问题定义</h3><p>既然对偶函数(14)给出了原始问题(1)的一个下界，那我们自然就想知道这个下界到底有多好，这就是拉格朗日对偶问题：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\max &\,\,\,\,\, g(\lambda,\mu)\\\
+s.t.&\,\,\,\,\, \mu\ge0
+\end{align} \tag{16}</script><p>下面我们通过两个例子讲解下怎么推导拉格朗日对偶问题：</p>
+<h4 id="1-线性方程组的最小二乘解"><a href="#1-线性方程组的最小二乘解" class="headerlink" title="1. 线性方程组的最小二乘解"></a>1. 线性方程组的最小二乘解</h4><script type="math/tex; mode=display">
+\begin{align}
+\min&\,\,\,\,\, x^{\mathrm T}x \\\
+s.t. &\,\,\,\,\, Ax = b
+\end{align} \tag{17}</script><p>该问题的拉格朗日函数是：</p>
+<script type="math/tex; mode=display">
+L(x)=x^{\mathrm T}x+\lambda ^{\mathrm T}(Ax-b) \tag{18}</script><p>从前面的讲解知道，这种只有等式约束的问题可以通过令$\nabla L(x) = 0$求解，而且$L(x)$是一个二次凸函数，其有唯一解，即：</p>
+<script type="math/tex; mode=display">
+\nabla L(x) = 2x^{\mathrm T}+\lambda^{T}A=0 
+\to x = -\frac{1}{2}A^{\mathrm T}\lambda \tag{19}</script><p>关于矩阵求导方法，请参考<a href="http://rosen.xyz/2017/03/04/%E7%9F%A9%E9%98%B5%E6%B1%82%E5%AF%BC%E6%96%B9%E6%B3%95/">矩阵求导</a></p>
+<p>将$x = -\frac{1}{2}A^{\mathrm T}\lambda$代入（18）即可得到原始问题的拉格朗日对偶函数：</p>
+<script type="math/tex; mode=display">
+g(\lambda) = -\frac{1}{4}\lambda^{\mathrm T}AA^{\mathrm T}\lambda-b^{\mathrm T}\lambda \tag{20}</script><p>那么，拉格朗日对偶问题为：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\max~~  -\frac{1}{4}\lambda^{\mathrm T}AA^{\mathrm T}\lambda-b^{\mathrm T}\lambda \tag{20}
+\end{align}</script><h4 id="2-标准形式的线性规划"><a href="#2-标准形式的线性规划" class="headerlink" title="2. 标准形式的线性规划"></a>2. 标准形式的线性规划</h4><script type="math/tex; mode=display">
+\begin{align}
+\min&\,\,\,\,\, c^{\mathrm T}x \\\
+s.t. &\,\,\,\,\, Ax=b\\\
+&\,\,\,\,\, x \ge 0
+\end{align} \tag{21}</script><p>该问题的拉格朗日函数是：</p>
+<script type="math/tex; mode=display">
+L(x,\lambda,\mu)=c^{\mathrm T}x+\lambda^{\mathrm T}(Ax-b)-\mu^{\mathrm T}x = (c+A^{\mathrm T}\lambda-\mu)^{\mathrm T}x-\lambda^{\mathrm T}b \tag{22}</script><p>这是一个线性函数，只有在$c+A^{\mathrm T}\lambda-\mu = 0$时，$L(x,\lambda,\mu)$才有平凡的下界$-\lambda^{\mathrm T}b$，否则下界为$-\infty$。</p>
+<p>故阿朗格朗日对偶问题是：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\max& \,\,\,\,\, -\lambda^{\mathrm T}b \\\
+s.t. &\,\,\,\,\, c+A^{\mathrm T}\lambda-\mu = 0 \\\
+&\,\,\,\,\, \mu \ge 0
+\end{align} \tag{23}</script><h3 id="对偶问题求解总结"><a href="#对偶问题求解总结" class="headerlink" title="对偶问题求解总结"></a>对偶问题求解总结</h3><p>求解对偶问题，就是通过KKT条件（线性方程最小二乘解问题）或者直接观察（标准线性规划问题）将拉格朗日函数中的原始问题的参数消掉，只剩下拉格朗日乘子的过程。同时要满足KKT条件。</p>
+<h3 id="强弱对偶"><a href="#强弱对偶" class="headerlink" title="强弱对偶"></a>强弱对偶</h3><p>我们费了这么半天劲绕到对偶问题上到底是为了啥？</p>
+<p>因为原始问题有时候往往不好解，而对偶问题一定是一个凸优化问题（式16中极大化目标是凹函数，约束集是凸集），好解。</p>
+<p>特别地，当对偶问题满足<strong>强对偶性</strong>时，对偶问题的最优解即是原始问题的最优解。假设对偶问题的最优解为 $d^\ast$，原始问题的最优解为$p^\ast$，则总有：</p>
+<script type="math/tex; mode=display">
+d^\ast \le p^\ast \tag{24}</script><p>如果上式中<strong>等号成立，则满足强对偶性</strong>，即：</p>
+<script type="math/tex; mode=display">
+d^\ast=p^\ast \tag{25}</script><p>否则认为其满足<strong>弱对偶性</strong>。</p>
+<h3 id="Slater约束准则"><a href="#Slater约束准则" class="headerlink" title="Slater约束准则"></a>Slater约束准则</h3><p>一般情况下，强对偶性不成立，但是如果原问题是凸问题，即是如下形式：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\min&\,\,\,\,\, f(x) \\\
+s.t. &\,\,\,\,\, g_i(x) \le 0 ,\,\,\,\,\, i=1,2,\cdots,m\\\
+&\,\,\,\,\, Ax=b
+\end{align} \tag{26}</script><p>其中$f,g_i(x)$是凸函数。并且满足一些约束准则，如Slater准则时，强对偶性成立。</p>
+<p><strong>Slater准则</strong>：当存在一个相对内点使得所有$g_i(x) \lt 0$严格成立时，强对偶性成立。如果$g_i(x)$中是仿射函数（$f(x)=c^{\mathrm T}x+t$这种函数），则不需要限制。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数学/" rel="tag">#数学</a>
+          
+            <a href="/tags/最优化/" rel="tag">#最优化</a>
+          
+            <a href="/tags/拉格朗日/" rel="tag">#拉格朗日</a>
+          
+            <a href="/tags/对偶/" rel="tag">#对偶</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/08/单例模式/" rel="next" title="单例模式">
+                <i class="fa fa-chevron-left"></i> 单例模式
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/30/Softmax求导推导/" rel="prev" title="Softmax求导推导">
+                Softmax求导推导 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/03/15/拉格朗日乘子法及其对偶问题/"
+           data-title="拉格朗日乘子法及其对偶问题" data-url="http://rosen.xyz/2017/03/15/拉格朗日乘子法及其对偶问题/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/pic.jpg"
+               alt="Rosen" />
+          <p class="site-author-name" itemprop="name">Rosen</p>
+          <p class="site-description motion-element" itemprop="description">一些学习上的总结与思考</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/rosenx" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日函数及KKT条件"><span class="nav-number">1.</span> <span class="nav-text">拉格朗日函数及KKT条件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个等式约束"><span class="nav-number">1.1.</span> <span class="nav-text">一个等式约束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多个等式约束"><span class="nav-number">1.2.</span> <span class="nav-text">多个等式约束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不等式约束"><span class="nav-number">1.3.</span> <span class="nav-text">不等式约束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KKT-条件"><span class="nav-number">1.4.</span> <span class="nav-text">KKT 条件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日对偶"><span class="nav-number">2.</span> <span class="nav-text">拉格朗日对偶</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对偶函数的定义"><span class="nav-number">2.1.</span> <span class="nav-text">对偶函数的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对偶问题定义"><span class="nav-number">2.2.</span> <span class="nav-text">对偶问题定义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-线性方程组的最小二乘解"><span class="nav-number">2.2.1.</span> <span class="nav-text">1. 线性方程组的最小二乘解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-标准形式的线性规划"><span class="nav-number">2.2.2.</span> <span class="nav-text">2. 标准形式的线性规划</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对偶问题求解总结"><span class="nav-number">2.3.</span> <span class="nav-text">对偶问题求解总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#强弱对偶"><span class="nav-number">2.4.</span> <span class="nav-text">强弱对偶</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Slater约束准则"><span class="nav-number">2.5.</span> <span class="nav-text">Slater约束准则</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rosen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"rosen"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("biMv55TLfF7CB6bXSpyftOMv-gzGzoHsz", "h7LA9rv3bMSYpiNy9KSzUgzf");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+</body>
+</html>

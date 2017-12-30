@@ -1,0 +1,828 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Playball:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="读书笔记,代码艺术," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="为什么要读《代码整洁之道》作为一个写了多年代码的程序猿，对“最痛苦的事情莫过于读别人写的代码”深有体会。事实上，即使是自己写的代码过段时间再去读也同样痛苦不堪。希望通过学习这本书，让以后写出来的代码更具有易读性。方便自己，方便他人。">
+<meta name="keywords" content="读书笔记,代码艺术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《代码整洁之道》读书笔记（一）——命名与函数">
+<meta property="og:url" content="http://rosen.xyz/2016/08/14/《代码整洁之道》读书笔记（一）/index.html">
+<meta property="og:site_name" content="Rosen">
+<meta property="og:description" content="为什么要读《代码整洁之道》作为一个写了多年代码的程序猿，对“最痛苦的事情莫过于读别人写的代码”深有体会。事实上，即使是自己写的代码过段时间再去读也同样痛苦不堪。希望通过学习这本书，让以后写出来的代码更具有易读性。方便自己，方便他人。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-30T13:16:06.457Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《代码整洁之道》读书笔记（一）——命名与函数">
+<meta name="twitter:description" content="为什么要读《代码整洁之道》作为一个写了多年代码的程序猿，对“最痛苦的事情莫过于读别人写的代码”深有体会。事实上，即使是自己写的代码过段时间再去读也同样痛苦不堪。希望通过学习这本书，让以后写出来的代码更具有易读性。方便自己，方便他人。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://rosen.xyz/2016/08/14/《代码整洁之道》读书笔记（一）/"/>
+
+  <title> 《代码整洁之道》读书笔记（一）——命名与函数 | Rosen </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?1613fa01ed708dc95bd2f373215ba3b4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Rosen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《代码整洁之道》读书笔记（一）——命名与函数
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-14T10:47:07+08:00" content="2016-08-14">
+              2016-08-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/程序猿/" itemprop="url" rel="index">
+                    <span itemprop="name">程序猿</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/14/《代码整洁之道》读书笔记（一）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/14/《代码整洁之道》读书笔记（一）/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/08/14/《代码整洁之道》读书笔记（一）/" class="leancloud_visitors" data-flag-title="《代码整洁之道》读书笔记（一）——命名与函数">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="为什么要读《代码整洁之道》"><a href="#为什么要读《代码整洁之道》" class="headerlink" title="为什么要读《代码整洁之道》"></a>为什么要读《代码整洁之道》</h3><p>作为一个写了多年代码的程序猿，对“最痛苦的事情莫过于读别人写的代码”深有体会。事实上，即使是自己写的代码过段时间再去读也同样痛苦不堪。希望通过学习这本书，让以后写出来的代码更具有易读性。方便自己，方便他人。</p>
+<a id="more"></a>
+<h3 id="命名的几条原则"><a href="#命名的几条原则" class="headerlink" title="命名的几条原则"></a>命名的几条原则</h3><h4 id="名副其实"><a href="#名副其实" class="headerlink" title="名副其实"></a>名副其实</h4><p>好的变量名，函数名或类名应该能告诉别人关于这个变量的所有大问题。如变量或类的名字应该告诉别人这个变量或类表示什么，函数的名字能清楚地表示函数的意图。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> d;      <span class="comment">//消逝的时间，以日计</span></span><br></pre></td></tr></table></figure></p>
+<p>上面这段代码中，d什么信息都没说明，需要注释才能读懂。下面的命名更能说明问题：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> daysSinceCreation;</span><br></pre></td></tr></table></figure></p>
+<h4 id="避免误导"><a href="#避免误导" class="headerlink" title="避免误导"></a>避免误导</h4><ol>
+<li>避免使用特殊词<br> 用来表示一组账号，accountGroup会比accountList更好，除非它真的是List类型。</li>
+<li>同样的概念，同样的拼写</li>
+</ol>
+<h4 id="做有意义的区分"><a href="#做有意义的区分" class="headerlink" title="做有意义的区分"></a>做有意义的区分</h4><ol>
+<li><p>数字系列命名没有意义</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">copyChars</span><span class="params">(<span class="keyword">char</span> a1[], <span class="keyword">char</span> a2[])</span></span>&#123;</span><br><span class="line">    copy a1 to a2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 上面代码中a1, a2并不为读者提供信息，改为source, destination更合适。</p>
+</li>
+<li>不要加废话<br> nameString会比name更好吗？</li>
+</ol>
+<h4 id="名称可读"><a href="#名称可读" class="headerlink" title="名称可读"></a>名称可读</h4><p>不要用莫名其妙的单词缩写代替原有代词</p>
+<h4 id="名称可被搜索"><a href="#名称可被搜索" class="headerlink" title="名称可被搜索"></a>名称可被搜索</h4><p>单字母或数字常量很难搜索，适合局部变量。对于全局，长名称会更合适。</p>
+<h4 id="类名与方法名"><a href="#类名与方法名" class="headerlink" title="类名与方法名"></a>类名与方法名</h4><p>类名应该是名词或名词短语，方法名应当是动词或动词短语。</p>
+<h4 id="别用双关语"><a href="#别用双关语" class="headerlink" title="别用双关语"></a>别用双关语</h4><p>避免将同一单词用于不同的概念。向列表中插入insert和append比add更合适，虽然add也有类似的含义。</p>
+<h4 id="使用领域名称"><a href="#使用领域名称" class="headerlink" title="使用领域名称"></a>使用领域名称</h4><p>只有程序员才会读你的代码，所以尽量用计算机领域专业术语来作为名称。如果找不到，使用所要解决问题领域的词汇。</p>
+<h4 id="添加有意义的语境"><a href="#添加有意义的语境" class="headerlink" title="添加有意义的语境"></a>添加有意义的语境</h4><p>street，houseNumber，city，state搁一块很容易知道是个地址，如果在其他地方碰到孤零零一个state，是否可想到state是某个地址的一部分。这种情况下，添加一个Address类更好。</p>
+<h4 id="总的原则"><a href="#总的原则" class="headerlink" title="总的原则"></a>总的原则</h4><p>不管起什么样的名字，都是为了方便阅读，<strong>明确</strong>概念。<strong>为起一个好名字值得一改再改</strong>。</p>
+<h3 id="什么样的函数是好的"><a href="#什么样的函数是好的" class="headerlink" title="什么样的函数是好的"></a>什么样的函数是好的</h3><h4 id="短小"><a href="#短小" class="headerlink" title="短小"></a>短小</h4><p>让函数变短小，并不意味着使用复杂的语法，让代码显得高深莫测。而是要进行适当的抽象和分解，将任务放到下层函数和其他同级函数中。函数的缩进层不应该多于一层或两层。代码20行封顶最佳。</p>
+<h4 id="只做一件事"><a href="#只做一件事" class="headerlink" title="只做一件事"></a>只做一件事</h4><p>让函数做的更少的事情是让函数短小的一种方法，事实上，只做一件事的函数最佳。</p>
+<h4 id="使用描述性的名称"><a href="#使用描述性的名称" class="headerlink" title="使用描述性的名称"></a>使用描述性的名称</h4><p>函数的名字需要很好的描述函数要做的事。长而具有描述性的名称要比短而令人费解的名称好。</p>
+<h4 id="参数尽量少"><a href="#参数尽量少" class="headerlink" title="参数尽量少"></a>参数尽量少</h4><p>最理想的参数数是0，其次是1，再次是2，尽量避免3及以上。有几个理由：</p>
+<ol>
+<li>参数越多，测试时考虑的情况越多</li>
+<li>参数的自然顺序很容易搞错，比如：<br> 调用<code>assertEqual(expected, actual)</code>的时候,很容易搞混expected和actual</li>
+</ol>
+<h4 id="尽量不要使用输出参数"><a href="#尽量不要使用输出参数" class="headerlink" title="尽量不要使用输出参数"></a>尽量不要使用输出参数</h4><p><code>string transform(const string &amp;str)</code>比<code>void transform(string &amp;str)</code>更好</p>
+<h4 id="无副作用"><a href="#无副作用" class="headerlink" title="无副作用"></a>无副作用</h4><p>不要在函数中修改不应该在该函数中修改的变量。如下面代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserValidator</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">checkPassword</span><span class="params">(String userName, String password)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(user with userName exists and password is right)&#123;</span><br><span class="line">            Session.initalize();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Session.initalize()不应该在checkPassword中调用，这造成了时序性耦合，也就是说checkPassword只能在初始化会话安全的时候调用。</p>
+<h4 id="使用异常处理代替返回错误码"><a href="#使用异常处理代替返回错误码" class="headerlink" title="使用异常处理代替返回错误码"></a>使用异常处理代替返回错误码</h4><p><code>if (deletePage(page) == E_OK){}</code>的错误码处理方式，虽语义清晰，但却会导致更深层次的嵌套结构。当返回错误码时意味着需要立刻处理错误。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(deletePage(page) == E_OK)&#123;</span><br><span class="line">    <span class="keyword">if</span>(registry.deleteReference(page.name) == E_OK)&#123;</span><br><span class="line">        <span class="keyword">if</span>()...</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        log error</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    log error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这时使用异常代替返回错误码就能将错误处理代码从主路径代码中分离出来：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    deletePage(page);</span><br><span class="line">    registry.deleteReference(page.name);</span><br><span class="line">    ...</span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    log e.message</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>异常处理代码搞乱了代码结构，把错误处理与正常流程混为一谈，最好对try/catch代码块进行进一步分离：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(Page page)</span></span>&#123;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        deletePageAndAllReference(page);</span><br><span class="line">    &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">        logError(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">deletePageAndAllReference</span><span class="params">(Page page)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    deletePage(page);</span><br><span class="line">    registry.deleteReference(page.name);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">logError</span><span class="params">(Exception e)</span></span>&#123;</span><br><span class="line">    log e.message</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="怎样写出这样的函数"><a href="#怎样写出这样的函数" class="headerlink" title="怎样写出这样的函数"></a>怎样写出这样的函数</h4><p>向写文章一样反复修改</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/读书笔记/" rel="tag">#读书笔记</a>
+          
+            <a href="/tags/代码艺术/" rel="tag">#代码艺术</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/07/广义线性模型与逻辑回归/" rel="next" title="广义线性模型与逻辑回归">
+                <i class="fa fa-chevron-left"></i> 广义线性模型与逻辑回归
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/22/tarjan算法/" rel="prev" title="Tarjan算法">
+                Tarjan算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/14/《代码整洁之道》读书笔记（一）/"
+           data-title="《代码整洁之道》读书笔记（一）——命名与函数" data-url="http://rosen.xyz/2016/08/14/《代码整洁之道》读书笔记（一）/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/pic.jpg"
+               alt="Rosen" />
+          <p class="site-author-name" itemprop="name">Rosen</p>
+          <p class="site-description motion-element" itemprop="description">一些学习上的总结与思考</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/rosenx" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要读《代码整洁之道》"><span class="nav-number">1.</span> <span class="nav-text">为什么要读《代码整洁之道》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命名的几条原则"><span class="nav-number">2.</span> <span class="nav-text">命名的几条原则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#名副其实"><span class="nav-number">2.1.</span> <span class="nav-text">名副其实</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#避免误导"><span class="nav-number">2.2.</span> <span class="nav-text">避免误导</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#做有意义的区分"><span class="nav-number">2.3.</span> <span class="nav-text">做有意义的区分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#名称可读"><span class="nav-number">2.4.</span> <span class="nav-text">名称可读</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#名称可被搜索"><span class="nav-number">2.5.</span> <span class="nav-text">名称可被搜索</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类名与方法名"><span class="nav-number">2.6.</span> <span class="nav-text">类名与方法名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#别用双关语"><span class="nav-number">2.7.</span> <span class="nav-text">别用双关语</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用领域名称"><span class="nav-number">2.8.</span> <span class="nav-text">使用领域名称</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加有意义的语境"><span class="nav-number">2.9.</span> <span class="nav-text">添加有意义的语境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总的原则"><span class="nav-number">2.10.</span> <span class="nav-text">总的原则</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么样的函数是好的"><span class="nav-number">3.</span> <span class="nav-text">什么样的函数是好的</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#短小"><span class="nav-number">3.1.</span> <span class="nav-text">短小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#只做一件事"><span class="nav-number">3.2.</span> <span class="nav-text">只做一件事</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用描述性的名称"><span class="nav-number">3.3.</span> <span class="nav-text">使用描述性的名称</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参数尽量少"><span class="nav-number">3.4.</span> <span class="nav-text">参数尽量少</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#尽量不要使用输出参数"><span class="nav-number">3.5.</span> <span class="nav-text">尽量不要使用输出参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#无副作用"><span class="nav-number">3.6.</span> <span class="nav-text">无副作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用异常处理代替返回错误码"><span class="nav-number">3.7.</span> <span class="nav-text">使用异常处理代替返回错误码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#怎样写出这样的函数"><span class="nav-number">3.8.</span> <span class="nav-text">怎样写出这样的函数</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rosen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"rosen"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("biMv55TLfF7CB6bXSpyftOMv-gzGzoHsz", "h7LA9rv3bMSYpiNy9KSzUgzf");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+</body>
+</html>
