@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习,梯度下降法,线性模型,逻辑回归,最大似然," />
+  <meta name="keywords" content="深度学习,数学," />
 
 
 
@@ -88,20 +88,18 @@
 
 
 
-<meta name="description" content="广义线性模型上一篇文章中介绍了线性模型：  y = \theta ^ \mathrm{T} x \tag{1}该模型虽然简单，但却富于变化。例如，假设样例对应的输出在指数上变化，我们可以将输出的对数作为逼近目标得到对数回归模型，即：      \ln{y} = \theta ^ \mathrm{T} x \tag{2}更一般地，考虑单调可微函数 $ f(\cdot) $，令      y = f">
-<meta name="keywords" content="机器学习,梯度下降法,线性模型,逻辑回归,最大似然">
+<meta name="description" content="论文及背景Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift 这篇论文提出了深度学习里加速训练的一个策略：Batch Normalization">
+<meta name="keywords" content="深度学习,数学">
 <meta property="og:type" content="article">
-<meta property="og:title" content="广义线性模型与逻辑回归">
-<meta property="og:url" content="http://rosen.xyz/2016/08/07/广义线性模型与逻辑回归/index.html">
+<meta property="og:title" content="Batch Normalization">
+<meta property="og:url" content="http://rosen.xyz/2018/01/04/Batch-Normalization/index.html">
 <meta property="og:site_name" content="Rosen">
-<meta property="og:description" content="广义线性模型上一篇文章中介绍了线性模型：  y = \theta ^ \mathrm{T} x \tag{1}该模型虽然简单，但却富于变化。例如，假设样例对应的输出在指数上变化，我们可以将输出的对数作为逼近目标得到对数回归模型，即：      \ln{y} = \theta ^ \mathrm{T} x \tag{2}更一般地，考虑单调可微函数 $ f(\cdot) $，令      y = f">
+<meta property="og:description" content="论文及背景Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift 这篇论文提出了深度学习里加速训练的一个策略：Batch Normalization">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://rosen.xyz/2016/08/07/广义线性模型与逻辑回归/sigmoid.png">
-<meta property="og:updated_time" content="2017-12-30T13:16:06.461Z">
+<meta property="og:updated_time" content="2018-01-04T14:04:44.832Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="广义线性模型与逻辑回归">
-<meta name="twitter:description" content="广义线性模型上一篇文章中介绍了线性模型：  y = \theta ^ \mathrm{T} x \tag{1}该模型虽然简单，但却富于变化。例如，假设样例对应的输出在指数上变化，我们可以将输出的对数作为逼近目标得到对数回归模型，即：      \ln{y} = \theta ^ \mathrm{T} x \tag{2}更一般地，考虑单调可微函数 $ f(\cdot) $，令      y = f">
-<meta name="twitter:image" content="http://rosen.xyz/2016/08/07/广义线性模型与逻辑回归/sigmoid.png">
+<meta name="twitter:title" content="Batch Normalization">
+<meta name="twitter:description" content="论文及背景Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift 这篇论文提出了深度学习里加速训练的一个策略：Batch Normalization">
 
 
 
@@ -122,9 +120,9 @@
 
 
 
-  <link rel="canonical" href="http://rosen.xyz/2016/08/07/广义线性模型与逻辑回归/"/>
+  <link rel="canonical" href="http://rosen.xyz/2018/01/04/Batch-Normalization/"/>
 
-  <title> 广义线性模型与逻辑回归 | Rosen </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> Batch Normalization | Rosen </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -264,7 +262,7 @@
             
             
               
-                广义线性模型与逻辑回归
+                Batch Normalization
               
             
           </h1>
@@ -276,8 +274,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-07T16:48:54+08:00" content="2016-08-07">
-              2016-08-07
+            <time itemprop="dateCreated" datetime="2018-01-04T19:00:53+08:00" content="2018-01-04">
+              2018-01-04
             </time>
           </span>
 
@@ -290,8 +288,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/论文阅读/" itemprop="url" rel="index">
+                    <span itemprop="name">论文阅读</span>
                   </a>
                 </span>
 
@@ -306,8 +304,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/07/广义线性模型与逻辑回归/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/07/广义线性模型与逻辑回归/" itemprop="commentsCount"></span>
+                <a href="/2018/01/04/Batch-Normalization/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/01/04/Batch-Normalization/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -317,7 +315,7 @@
 
           
           
-             <span id="/2016/08/07/广义线性模型与逻辑回归/" class="leancloud_visitors" data-flag-title="广义线性模型与逻辑回归">
+             <span id="/2018/01/04/Batch-Normalization/" class="leancloud_visitors" data-flag-title="Batch Normalization">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -339,78 +337,78 @@
       
 
       
-        <h3 id="广义线性模型"><a href="#广义线性模型" class="headerlink" title="广义线性模型"></a>广义线性模型</h3><p>上一篇文章中介绍了线性模型：</p>
-<script type="math/tex; mode=display">
-y = \theta ^ \mathrm{T} x \tag{1}</script><p>该模型虽然简单，但却富于变化。例如，假设样例对应的输出在指数上变化，我们可以将输出的对数作为逼近目标得到对数回归模型，即：</p>
-<script type="math/tex; mode=display">
-    \ln{y} = \theta ^ \mathrm{T} x \tag{2}</script><p>更一般地，考虑<strong>单调可微</strong>函数 $ f(\cdot) $，令</p>
-<script type="math/tex; mode=display">
-    y = f ^ {-1} (\theta ^ \mathrm{T} x) \tag{3}</script><p>即可得到<strong>广义线性模型</strong>。其中 $ f(\cdot) $ 的作用是联系模型输出与样例真实标记，称之为联系函数。</p>
+        <h2 id="论文及背景"><a href="#论文及背景" class="headerlink" title="论文及背景"></a>论文及背景</h2><p><em>Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift</em></p>
+<p>这篇论文提出了深度学习里加速训练的一个策略：Batch Normalization</p>
 <a id="more"></a>
-<h3 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h3><p>根据上面理论，如果能找到一个函数使得线性回归产生的预测值 $ z = \theta ^ {T} x $ 映射到真实标记 $ \lbrace 0, 1 \rbrace $ 中，即可将线性模型用于分类任务。最理想的是单位阶跃函数：</p>
+<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><blockquote>
+<p>Distribution of each layer’s inputs changes during training. This slows down the training by requiring lower learning rates and careful parameter initialization    </p>
+<p>— Internal Covariate Shift Phenomenon</p>
+</blockquote>
+<p>在深度学习训练过程中，每一层输入的分布是变化的，很小的参数改变可能引发网络剧烈变动，而且随着网络深度的增加这种情况会更严重。为了防止网络剧烈波动，学习率就需要设置的很小，导致训练会很慢。同时，参数的初始设置也需要很小心。</p>
+<p>而且如果参数变动厉害，对于一些非线性变换，会有gradient vanish的问题。如：</p>
 <script type="math/tex; mode=display">
-    y =
-    \begin{cases}
-    0,  & \text{ $ z $ < 0 } \\\
-    0.5, & \text{ $ z $ = 0}  \\\
-    1, & \text{ $ z $ > 0} \\\
-    \end{cases}
-    \tag{4}</script><p>但是该函数不可导，不能作为式（3）中的 $ f ^ {-1} (\cdot) $。Sigmoid函数是一个常用的替代方案：</p>
+z = g(Wx+b)</script><p>其中，$g$是sigmoid。如果$W,b$变化剧烈，$u=Wx+b$的值也会变动很大，很容易到达sigmoid两边的区域，参数会很小。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="出发点"><a href="#出发点" class="headerlink" title="出发点"></a>出发点</h3><p>神经网络可看出多个子网络的组合，比如计算：</p>
 <script type="math/tex; mode=display">
-    g(z) = \frac {1} {1 + e ^ {-z}} \tag{5}</script><p>该函数将$ z $映射到 $ (0, 1) $ 之间，$ g(0) = 0.5 $，其函数如下图所示：</p>
-<p><div align="center">
-    <img src="./sigmoid.png" alt="sigmoid函数" align="center">
-</div><br>可认为$ g(z) $的值为样本属于正类的概率，则若 $ z &gt; 0.5$，则判定该样本为正类，$ z &lt; 0.5 $判定该样本为负类。将 $ g(z) $ 作为 $f ^ {-1}$ 代入式（3）中得到假设函数：</p>
+l = F_2(F_1(u,\theta_1),\theta_2)</script><p>这个网络可看成2个子网络$F_1,F_2$.</p>
+<p>对于每个网络$F$，更新步骤为：</p>
 <script type="math/tex; mode=display">
-    h(x) = \frac {1} {1 + e ^ {-\theta ^ \mathrm{T} x}} \tag{6}</script><p>该模型便称之为<strong>逻辑回归</strong>。剩下的问题就是求解 $ \theta $了。</p>
-<h3 id="最大似然"><a href="#最大似然" class="headerlink" title="最大似然"></a>最大似然</h3><p>上节提到逻辑回归的模型输出 $ h(x) $ 可看作样本 $x$ 属于正类的后验概率，那么属于负类的后验概率自然是 $ 1 - h(x) $，用概率的形式可表示为：<br>
-$$
-\begin{align}
-    &p(y = 1 | x; \theta) = h(x)   \\\
-    &p(y = 0 | x; \theta) = 1 - h(x)
-\end{align}\tag{7}
-$$
-于是求解 $ \theta $ 相当于参数估计，可用最大似然法。
+\theta \leftarrow \theta - \frac{\alpha}{m} \sum_{i=1}^{m} \frac{\partial F(x_i, \theta)}{\partial \theta}</script><p>其中$x$为当前子网络的输入，之前网络的输出。</p>
+<p><strong>正如如果训练集和测试集样本分布一致的话，模型的Generalization会很好一样，如果每个子网络的输入分布保持一致，训练速度会加快。</strong>(感觉有点牵强)</p>
+<h3 id="一般白化的问题"><a href="#一般白化的问题" class="headerlink" title="一般白化的问题"></a>一般白化的问题</h3><p>要想得到一致的分布，一下子想到的做法是在每一层输出的时候白化一下（标准化）。比如，有个网络计算：</p>
+<script type="math/tex; mode=display">
+x = u + b</script><p>不考虑方差的话，标准化过程是：$x = x - E(x)$。</p>
+<p>如果忽略$E(x)$与$b$之间的关系，更新$b$时有：$b = b + \Delta b$，那么</p>
+<script type="math/tex; mode=display">
+u + (b + \Delta b) - E(u + (b + \Delta b)) = u + b - E[u + b]</script><p>其实是没有变化的，那么最后loss也不会变，最后$b$会变成正无穷。</p>
+<p>出现上面情况的原因是，这个计算过程忽略了大量关联关系：如期望与参数之间的关系，样本与样本之间的关系。</p>
+<p>一般的，如果把白话抽象表示如下：</p>
+<script type="math/tex; mode=display">
+\hat x  = Norm(x, X)</script><p>那么$x$ 与$X$是有关系的，那么在计算梯度时不仅$\frac{\partial loss}{\partial x}$要考虑，同时$\frac{\partial loss}{\partial X}$也要考虑。这是计算代价会很高，需要计算：</p>
+<script type="math/tex; mode=display">
+Cov[x] = E_{x \in X}[xx^T] - E[x]E[x]^T \\
+x = Cov[x] ^ {-1/2}(x - E[x])</script><p>为此需要一种新的白化方法</p>
+<h3 id="论文的方法"><a href="#论文的方法" class="headerlink" title="论文的方法"></a>论文的方法</h3><p>为了解决一般白化的问题，作者做了两个简化：</p>
+<ol>
+<li>将每一层的每个特征看作独立</li>
+<li>在一个mini-batch上白化，而不是在整个数据集上白化</li>
+</ol>
+<p>具体来说，对于一个输入$x = (x^{(1)},\cdots,x^{(d)})$，白化过程是：</p>
+<script type="math/tex; mode=display">
+\hat{x} ^{(k)} = \frac{x^{(k)} - E[x^{(k)}]}{\sqrt{Var[x^{(k)}]}}</script><p>为了保证不改变模型的表达能力，会加入一个线性变化：</p>
+<script type="math/tex; mode=display">
+y^{(k)} = \gamma ^{(k)} \hat{x} ^{(k)} + \beta^{(k)} \tag{1}</script><p>当$\gamma^{(k)} = \sqrt{Var[x^{(k)}]}$，$\beta^{(k)} = E[x^{(k)}]$,事实上是恢复了原来的分布。</p>
+<p>过程如下：</p>
+<div align="center">
 
-给定数据集 $ \lbrace (x_ i, y_ i) \rbrace{i = 1} ^ {m}$，似然函数为：
-$$
-    l(\theta) = \sum_ {i = 1} ^ {m} \ln{p(y_ i|x_ i; \theta)} \tag{8}
-$$
-其中：
-$$
-    \ln{p(y_ i|x_ i; \theta)} = 
-    \begin{cases}
-    \ln{p(y_ i = 1| x_ i; \theta)} = \ln{h(x ^ {i})}, &\text{ $ y_ i $ = 1 } \\
-    \ln{p(y_ i = 0| x_ i; \theta)} = \ln{(1 - h(x ^ {i}))}, &\text{ $ y_ i $ = 0 }
-    \end{cases}
-    \tag {9}
-$$
-根据式（9），式（8）可重写为：
-$$
-    l(\theta) = 
-    \sum_ {i = 1} ^ {m} y_ i \ln{h(x ^ {i})} + (1 - y_ i) \ln {(1 - h(x ^ {i}))} \tag{10}
-$$
-问题即变成：
-$$
-    \max_ {\theta} l(\theta) \tag{11}
-$$
-令 $ J(\theta) = -l(\theta) $，式（11）等同于：
-$$
-    \min_ {\theta} J(\theta) = 
-    \sum_ {i = 1} ^ {m} -y_ i \ln{h(x ^ {i})} - (1 - y_ i) \ln {(1 - h(x ^ {i}))} \tag{12}
-$$
-因为式（12）中的两项对于每个 $ i $ 不能同时取到，并且 $ -\ln{x} $ 与 $ -\ln{(1 - x)} $均为单调函数，故 $ J(\theta) $ 为凸函数（凸函数的线性叠加也是凸函数），可用梯度下降法求得最优解。
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;./bn-1.png&quot; align=center /&gt;</span><br></pre></td></tr></table></figure>
 
-其过程为：
-$$
-\begin{align}
-    &\text{Repeat until convergence}\lbrace\\
-    &\qquad \theta_ j = \theta_ j - \alpha \sum_ {i = 1} ^ {m} (h(x^{i}) - y ^ {i}) x_ {j} ^ {i} 
-    &\qquad(j = 0,1,2,\cdots,n) \\
-    &\rbrace\\
-\end{align}
-$$
-</p>
+</div>
+
+
+<p>那么问题来了，<strong>既然分布恢复了，那又如何保持一致</strong>。</p>
+<blockquote>
+<p>这其实要绕过弯，如果我们把式(1)和后面网络放在一起当作一个子网络，那么对于这个子网络来说输入的分布就是标准正态分布</p>
+</blockquote>
+<p>在inference阶段，确定$E[x]$和$Var[x]$的方法是取多个训练集batch，求出相应的均值和方差，然后用无偏估计：</p>
+<script type="math/tex; mode=display">
+E[x] \leftarrow E_B[\mu_B] \\
+Var[x] \leftarrow \frac{m}{m - 1} E_B[\sigma_B^2]</script><p>具体训练步骤如下：</p>
+<div align="center">
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;./bn-2.png&quot; align=center /&gt;</span><br></pre></td></tr></table></figure>
+
+</div>
+
+
+<p>另外，batchnorm能够使得网络训练对参数大小不敏感。对于：</p>
+<script type="math/tex; mode=display">
+x = Wu + b \\
+BN(x) = BN(Wu+b) = BN(Wu) = BN((aW)u) \\
+\frac{\partial BN((aW)u)}{\partial u} = \frac{\partial BN((W)u)}{\partial u}  \\</script><p>也就是说即使参数变大了，使用BN后，backward的时候实际上是没有影响的</p>
+<p>并且</p>
+<script type="math/tex; mode=display">
+\frac{\partial BN((aW)u)}{\partial(aW)} = \frac{1}{a} \frac{\partial BN(Wu)}{\partial W}</script><p>权值变大的时候，相应的梯度会变小，可以使得网络训练更加稳定。</p>
 
       
     </div>
@@ -433,15 +431,9 @@ $$
       
         <div class="post-tags">
           
-            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+            <a href="/tags/深度学习/" rel="tag">#深度学习</a>
           
-            <a href="/tags/梯度下降法/" rel="tag">#梯度下降法</a>
-          
-            <a href="/tags/线性模型/" rel="tag">#线性模型</a>
-          
-            <a href="/tags/逻辑回归/" rel="tag">#逻辑回归</a>
-          
-            <a href="/tags/最大似然/" rel="tag">#最大似然</a>
+            <a href="/tags/数学/" rel="tag">#数学</a>
           
         </div>
       
@@ -450,17 +442,13 @@ $$
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/31/从线性回归谈机器学习的几个重要问题/" rel="next" title="从线性回归谈机器学习的几个重要问题">
-                <i class="fa fa-chevron-left"></i> 从线性回归谈机器学习的几个重要问题
+              <a href="/2017/12/30/Softmax求导推导/" rel="next" title="Softmax求导推导">
+                <i class="fa fa-chevron-left"></i> Softmax求导推导
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/14/《代码整洁之道》读书笔记（一）/" rel="prev" title="《代码整洁之道》读书笔记（一）——命名与函数">
-                《代码整洁之道》读书笔记（一）——命名与函数 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -486,8 +474,8 @@ $$
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/08/07/广义线性模型与逻辑回归/"
-           data-title="广义线性模型与逻辑回归" data-url="http://rosen.xyz/2016/08/07/广义线性模型与逻辑回归/">
+      <div class="ds-thread" data-thread-key="2018/01/04/Batch-Normalization/"
+           data-title="Batch Normalization" data-url="http://rosen.xyz/2018/01/04/Batch-Normalization/">
       </div>
     
   </div>
@@ -589,7 +577,7 @@ $$
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#广义线性模型"><span class="nav-number">1.</span> <span class="nav-text">广义线性模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逻辑回归"><span class="nav-number">2.</span> <span class="nav-text">逻辑回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最大似然"><span class="nav-number">3.</span> <span class="nav-text">最大似然</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#论文及背景"><span class="nav-number">1.</span> <span class="nav-text">论文及背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Motivation"><span class="nav-number">2.</span> <span class="nav-text">Motivation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">3.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#出发点"><span class="nav-number">3.1.</span> <span class="nav-text">出发点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一般白化的问题"><span class="nav-number">3.2.</span> <span class="nav-text">一般白化的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#论文的方法"><span class="nav-number">3.3.</span> <span class="nav-text">论文的方法</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
