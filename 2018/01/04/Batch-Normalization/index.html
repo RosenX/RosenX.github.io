@@ -96,10 +96,13 @@
 <meta property="og:site_name" content="Rosen">
 <meta property="og:description" content="论文及背景Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift 这篇论文提出了深度学习里加速训练的一个策略：Batch Normalization">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-04T14:04:44.832Z">
+<meta property="og:image" content="http://rosen.xyz/2018/01/04/Batch-Normalization/bn-1.png">
+<meta property="og:image" content="http://rosen.xyz/2018/01/04/Batch-Normalization/bn-2.png">
+<meta property="og:updated_time" content="2018-01-05T00:40:46.244Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Batch Normalization">
 <meta name="twitter:description" content="论文及背景Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift 这篇论文提出了深度学习里加速训练的一个策略：Batch Normalization">
+<meta name="twitter:image" content="http://rosen.xyz/2018/01/04/Batch-Normalization/bn-1.png">
 
 
 
@@ -379,13 +382,7 @@ x = Cov[x] ^ {-1/2}(x - E[x])</script><p>为此需要一种新的白化方法</p
 <script type="math/tex; mode=display">
 y^{(k)} = \gamma ^{(k)} \hat{x} ^{(k)} + \beta^{(k)} \tag{1}</script><p>当$\gamma^{(k)} = \sqrt{Var[x^{(k)}]}$，$\beta^{(k)} = E[x^{(k)}]$,事实上是恢复了原来的分布。</p>
 <p>过程如下：</p>
-<div align="center">
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;./bn-1.png&quot; align=center /&gt;</span><br></pre></td></tr></table></figure>
-
-</div>
-
-
+<p><img src="bn-1.png" alt="BN 过程" title="batchnorm 过程"></p>
 <p>那么问题来了，<strong>既然分布恢复了，那又如何保持一致</strong>。</p>
 <blockquote>
 <p>这其实要绕过弯，如果我们把式(1)和后面网络放在一起当作一个子网络，那么对于这个子网络来说输入的分布就是标准正态分布</p>
@@ -394,13 +391,7 @@ y^{(k)} = \gamma ^{(k)} \hat{x} ^{(k)} + \beta^{(k)} \tag{1}</script><p>当$\gam
 <script type="math/tex; mode=display">
 E[x] \leftarrow E_B[\mu_B] \\
 Var[x] \leftarrow \frac{m}{m - 1} E_B[\sigma_B^2]</script><p>具体训练步骤如下：</p>
-<div align="center">
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;./bn-2.png&quot; align=center /&gt;</span><br></pre></td></tr></table></figure>
-
-</div>
-
-
+<p><img src="bn-2.png" alt="BN 网络训练" title="batchnorm 网络训练过程"></p>
 <p>另外，batchnorm能够使得网络训练对参数大小不敏感。对于：</p>
 <script type="math/tex; mode=display">
 x = Wu + b \\
