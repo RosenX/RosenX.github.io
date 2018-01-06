@@ -98,7 +98,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://rosen.xyz/2018/01/04/Batch-Normalization/bn-1.png">
 <meta property="og:image" content="http://rosen.xyz/2018/01/04/Batch-Normalization/bn-2.png">
-<meta property="og:updated_time" content="2018-01-05T00:40:46.244Z">
+<meta property="og:updated_time" content="2018-01-06T01:57:37.431Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Batch Normalization">
 <meta name="twitter:description" content="论文及背景Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift 这篇论文提出了深度学习里加速训练的一个策略：Batch Normalization">
@@ -350,7 +350,7 @@
 <p>在深度学习训练过程中，每一层输入的分布是变化的，很小的参数改变可能引发网络剧烈变动，而且随着网络深度的增加这种情况会更严重。为了防止网络剧烈波动，学习率就需要设置的很小，导致训练会很慢。同时，参数的初始设置也需要很小心。</p>
 <p>而且如果参数变动厉害，对于一些非线性变换，会有gradient vanish的问题。如：</p>
 <script type="math/tex; mode=display">
-z = g(Wx+b)</script><p>其中，$g$是sigmoid。如果$W,b$变化剧烈，$u=Wx+b$的值也会变动很大，很容易到达sigmoid两边的区域，参数会很小。</p>
+z = g(Wx+b)</script><p>其中，$g$是sigmoid。如果$W,b$变化剧烈，$u=Wx+b$的值也会变动很大，很容易到达sigmoid两边的区域，梯度会很小。</p>
 <h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="出发点"><a href="#出发点" class="headerlink" title="出发点"></a>出发点</h3><p>神经网络可看出多个子网络的组合，比如计算：</p>
 <script type="math/tex; mode=display">
 l = F_2(F_1(u,\theta_1),\theta_2)</script><p>这个网络可看成2个子网络$F_1,F_2$.</p>
@@ -367,7 +367,7 @@ u + (b + \Delta b) - E(u + (b + \Delta b)) = u + b - E[u + b]</script><p>其实�
 <p>出现上面情况的原因是，这个计算过程忽略了大量关联关系：如期望与参数之间的关系，样本与样本之间的关系。</p>
 <p>一般的，如果把白话抽象表示如下：</p>
 <script type="math/tex; mode=display">
-\hat x  = Norm(x, X)</script><p>那么$x$ 与$X$是有关系的，那么在计算梯度时不仅$\frac{\partial loss}{\partial x}$要考虑，同时$\frac{\partial loss}{\partial X}$也要考虑。这是计算代价会很高，需要计算：</p>
+\hat x  = Norm(x, X)</script><p>那么$x$ 与$X$是有关系的，那么在计算梯度时不仅$\frac{\partial loss}{\partial x}$要考虑，同时$\frac{\partial loss}{\partial X}$也要考虑。这时计算代价会很高，需要计算：</p>
 <script type="math/tex; mode=display">
 Cov[x] = E_{x \in X}[xx^T] - E[x]E[x]^T \\
 x = Cov[x] ^ {-1/2}(x - E[x])</script><p>为此需要一种新的白化方法</p>
@@ -383,7 +383,7 @@ x = Cov[x] ^ {-1/2}(x - E[x])</script><p>为此需要一种新的白化方法</p
 y^{(k)} = \gamma ^{(k)} \hat{x} ^{(k)} + \beta^{(k)} \tag{1}</script><p>当$\gamma^{(k)} = \sqrt{Var[x^{(k)}]}$，$\beta^{(k)} = E[x^{(k)}]$,事实上是恢复了原来的分布。</p>
 <p>过程如下：</p>
 <p><img src="bn-1.png" alt="BN 过程" title="batchnorm 过程"></p>
-<p>那么问题来了，<strong>既然分布恢复了，那又如何保持一致</strong>。</p>
+<p>那么问题来了，<strong>既然分布恢复了，那又如何保证每个子网络输入分布保持一致？</strong>。</p>
 <blockquote>
 <p>这其实要绕过弯，如果我们把式(1)和后面网络放在一起当作一个子网络，那么对于这个子网络来说输入的分布就是标准正态分布</p>
 </blockquote>
