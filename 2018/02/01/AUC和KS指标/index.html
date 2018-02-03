@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="数学,矩阵," />
+  <meta name="keywords" content="评价指标," />
 
 
 
@@ -88,18 +88,20 @@
 
 
 
-<meta name="description" content="在机器学习的公式推导中大量运用了矩阵求导的知识，以前只是凭着函数求导的感觉来做，碰到矩阵转置的时候总是弄不清楚到底要不要转置。这几天看了下矩阵求导方面的知识，总结如下。 在本文中向量默认用列向量表示。">
-<meta name="keywords" content="数学,矩阵">
+<meta name="description" content="近期做的一个风险评估项目中要用到AUC和KS，总结一下。 对于二分类，分类结果可归为四类：      预测正类 预测负类     真实正类 TP FN   真实负类 FP TN     注：T/F表示是否分错，P/N表示分到了正类或负类">
+<meta name="keywords" content="评价指标">
 <meta property="og:type" content="article">
-<meta property="og:title" content="矩阵求导方法">
-<meta property="og:url" content="http://rosen.xyz/2017/03/04/矩阵求导方法/index.html">
+<meta property="og:title" content="AUC和KS指标">
+<meta property="og:url" content="http://rosen.xyz/2018/02/01/AUC和KS指标/index.html">
 <meta property="og:site_name" content="Rosen">
-<meta property="og:description" content="在机器学习的公式推导中大量运用了矩阵求导的知识，以前只是凭着函数求导的感觉来做，碰到矩阵转置的时候总是弄不清楚到底要不要转置。这几天看了下矩阵求导方面的知识，总结如下。 在本文中向量默认用列向量表示。">
+<meta property="og:description" content="近期做的一个风险评估项目中要用到AUC和KS，总结一下。 对于二分类，分类结果可归为四类：      预测正类 预测负类     真实正类 TP FN   真实负类 FP TN     注：T/F表示是否分错，P/N表示分到了正类或负类">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-30T13:16:06.464Z">
+<meta property="og:image" content="http://rosen.xyz/2018/02/01/AUC和KS指标/ROC.png">
+<meta property="og:updated_time" content="2018-02-03T01:12:17.451Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="矩阵求导方法">
-<meta name="twitter:description" content="在机器学习的公式推导中大量运用了矩阵求导的知识，以前只是凭着函数求导的感觉来做，碰到矩阵转置的时候总是弄不清楚到底要不要转置。这几天看了下矩阵求导方面的知识，总结如下。 在本文中向量默认用列向量表示。">
+<meta name="twitter:title" content="AUC和KS指标">
+<meta name="twitter:description" content="近期做的一个风险评估项目中要用到AUC和KS，总结一下。 对于二分类，分类结果可归为四类：      预测正类 预测负类     真实正类 TP FN   真实负类 FP TN     注：T/F表示是否分错，P/N表示分到了正类或负类">
+<meta name="twitter:image" content="http://rosen.xyz/2018/02/01/AUC和KS指标/ROC.png">
 
 
 
@@ -120,9 +122,9 @@
 
 
 
-  <link rel="canonical" href="http://rosen.xyz/2017/03/04/矩阵求导方法/"/>
+  <link rel="canonical" href="http://rosen.xyz/2018/02/01/AUC和KS指标/"/>
 
-  <title> 矩阵求导方法 | Rosen </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> AUC和KS指标 | Rosen </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -262,7 +264,7 @@
             
             
               
-                矩阵求导方法
+                AUC和KS指标
               
             
           </h1>
@@ -274,8 +276,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-04T21:24:46+08:00" content="2017-03-04">
-              2017-03-04
+            <time itemprop="dateCreated" datetime="2018-02-01T12:11:43+08:00" content="2018-02-01">
+              2018-02-01
             </time>
           </span>
 
@@ -304,8 +306,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/03/04/矩阵求导方法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/04/矩阵求导方法/" itemprop="commentsCount"></span>
+                <a href="/2018/02/01/AUC和KS指标/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/01/AUC和KS指标/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -315,7 +317,7 @@
 
           
           
-             <span id="/2017/03/04/矩阵求导方法/" class="leancloud_visitors" data-flag-title="矩阵求导方法">
+             <span id="/2018/02/01/AUC和KS指标/" class="leancloud_visitors" data-flag-title="AUC和KS指标">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -337,68 +339,48 @@
       
 
       
-        <p>在机器学习的公式推导中大量运用了矩阵求导的知识，以前只是凭着函数求导的感觉来做，碰到矩阵转置的时候总是弄不清楚到底要不要转置。这几天看了下矩阵求导方面的知识，总结如下。</p>
-<p>在本文中向量默认用列向量表示。</p>
+        <p>近期做的一个风险评估项目中要用到AUC和KS，总结一下。</p>
+<p>对于二分类，分类结果可归为四类：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>预测正类</th>
+<th>预测负类</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>真实正类</td>
+<td>TP</td>
+<td>FN</td>
+</tr>
+<tr>
+<td>真实负类</td>
+<td>FP</td>
+<td>TN</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>注：T/F表示是否分错，P/N表示分到了正类或负类</p>
 <a id="more"></a>
-<h2 id="Layout-Conventions"><a href="#Layout-Conventions" class="headerlink" title="Layout Conventions"></a>Layout Conventions</h2><p>这是在wiki上看到的词，不太好翻译，我理解的意思是矩阵元素的摆放方式。向量$\mathbf y \in\mathbb R^m$对向量$\mathbf x \in \mathbb R^n$求导后数据有两种摆放形式：</p>
-<ol>
-<li>Numerator layout: 求导后矩阵维数由$\mathbf y$和$\mathbf x^{\mathrm T}$决定，是$m \times n$ ，最后一维与$\mathbf x^{\mathrm T}$相同。</li>
-<li>Denominator layout: 求导后矩阵维数是$n \times m$，由$\mathbf y^{\mathrm T}$和$\mathbf x$决定，最后一维与$\mathbf y^{\mathrm T}$相同</li>
-</ol>
-<p>用$\frac {\partial y}{\partial \mathbf x}$举例（变量可以看作是长度唯一的向量），使用Numerator layout得到的是一个列向量，而使用Denominator layout得到的是一个行向量。</p>
-<p>这两种方式得到的结果是一样的，只不过一个是另一个的转置。在本文中默认使用Numerator layout方式。</p>
-<h2 id="元素级求导"><a href="#元素级求导" class="headerlink" title="元素级求导"></a>元素级求导</h2><p>矩阵$\mathbf A$对矩阵$\mathbf B$求导（向量和标量可以看做是特殊矩阵），实际上是$\mathbf A$中每个元素中$\mathbf B$中每个元素求导，然后把所有导数按照一定的摆放方式排成一个矩阵或张量。</p>
-<h3 id="向量对标量"><a href="#向量对标量" class="headerlink" title="向量对标量"></a>向量对标量</h3><p>对于向量$\mathbf y = \left[  \begin{array}{c}  y_1\\ y_2  \\ \vdots \\ y_m \end{array} \right]$， 其对标量$x$求导的结果是：$\frac{\partial \mathbf y}{\partial x} = \begin{bmatrix}\frac{\partial y_1}{\partial x} \\ \frac{\partial y_2}{\partial x}\\ \vdots \\ \frac{\partial y_m}{\partial x}\end{bmatrix}$</p>
-<h3 id="标量对向量"><a href="#标量对向量" class="headerlink" title="标量对向量"></a>标量对向量</h3><p>对于标量$y$，其对向量$\mathbf x = \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix}$求导的结果是：$\frac{\partial y}{\partial \mathbf x} =\begin{bmatrix} \frac{\partial y}{\partial x_1} &amp;\frac{\partial y}{\partial x_2} &amp;\cdots &amp;\frac{\partial y}{\partial x_n}\end{bmatrix}$</p>
-<h3 id="向量对向量"><a href="#向量对向量" class="headerlink" title="向量对向量"></a>向量对向量</h3><p>向量$\mathbf y = \left[  \begin{array}{c}  y_1\\ y_2  \\ \vdots \\ y_m \end{array} \right]$ 对向量$\mathbf x = \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix}$求导的结果是：$\frac{\partial \mathbf y}{\partial \mathbf x} = \begin{bmatrix}\frac{\partial y_1}{\partial x_1} &amp;  \frac{\partial y_1}{\partial x_2}  &amp; \cdots  &amp;\frac{\partial y_1}{\partial x_n} \\ \frac{\partial y_2}{\partial x_1} &amp;  \frac{\partial y_2}{\partial x_2}  &amp; \cdots  &amp;\frac{\partial y_2}{\partial x_n} \\ \vdots &amp;  \vdots &amp;  \ddots &amp; \vdots \\ \frac{\partial y_m}{\partial x_1} &amp;  \frac{\partial y_m}{\partial x_2}  &amp; \cdots  &amp;\frac{\partial y_m}{\partial x_n} \end{bmatrix}$</p>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>矩阵$\mathbf Y$对$x$求导时，$\mathbf Y$中的每个元素分别对$x$求导，$\frac{\partial \mathbf Y}{\partial x}$的形状与$\mathbf Y$相同。$\frac{\partial x}{\partial \mathbf Y}$的形状与$\mathbf Y^{\mathrm T}$相同。</p>
-<p>矩阵与向量之间的求导在平面无法展开，大体思想相同：分子对分母里面的每个元素按照上面规则求导，最后将结果写成一个张量。</p>
-<h2 id="公式求导"><a href="#公式求导" class="headerlink" title="公式求导"></a>公式求导</h2><p>函数求导中的乘法法则，加法法则和链式法则也可适用到矩阵公式求导中。</p>
-<p>对矩阵公式求导时，先弄清楚分子分母最后的结果分别是什么（如分子是标量，分母是向量），然后根据元素级求导法则确定最后所求的的形状应该什么样的。根据最后的形状在求导过程中处理转置问题。</p>
-<h3 id="普通公式求导"><a href="#普通公式求导" class="headerlink" title="普通公式求导"></a>普通公式求导</h3><p>下面通过几个例子讲解公式求导方法</p>
-<p>假设$\mathbf x \in \mathbb R^{n}$，$\mathbf A \in \mathbb R ^ {n \times m}$</p>
-<ol>
-<li><p>$\frac{\partial \mathbf x^{\mathrm T} \mathbf A}{\partial \mathbf x} = \mathbf A^{\mathrm T}$</p>
-<p>分子分母都是一个向量，最后的结果是一个矩阵，该矩阵的维数是$m \times n​$(看Layout Conventions部分)，所以最后的结果是$\mathbf A ^{\mathrm T}$而不是$\mathbf A$。</p>
-</li>
-<li><p>$\frac{\partial \mathbf x^{\mathrm T} \mathbf A \mathbf x}{\partial \mathbf x} = \mathbf x ^ {\mathrm T}(\mathbf A + \mathbf A^{\mathrm T})$</p>
-<p>分子是一个数，分母是一个向量，故最后的结果也是一个向量，与$\mathbf x ^ {\mathrm T}$形状相同，故其推导过程如下：</p>
+<h2 id="ROC曲线"><a href="#ROC曲线" class="headerlink" title="ROC曲线"></a>ROC曲线</h2><p>通常二分类器会输出一个0～1之间的实数，如果设定一个阈值$\alpha$，则一般会将输出概率大于$\alpha$的归为正类，小于的归为负类。</p>
+<p>给定所有样本的输出概率，我们可以将输出概率从大到小排序。从前往后遍历所有样本，将当前样本的输出概率作为$\alpha$，则前面的所有样本会归为正类，后面的是负类。在所有样本都分完类后，就可以计算TP，FN，FP和TN了。</p>
+<p>这里有两个重要的统计量：</p>
+<ul>
+<li>真正类率（真实为真类，预测也为正类）：$TPR = \frac{TP}{TP + FN}$</li>
+<li>假正类率（真实为负类，预测为正类，误判）：$FPR = \frac{FP}{FP+FN}$</li>
+</ul>
+<p>将所有样本的$(FPR, TPR)$作为坐标，按顺序依次画出即可得到ROC曲线。</p>
+<p><img src="ROC.png" alt="ROC"></p>
+<p>如果所示，对角线表示随机模型。（0，1）是理性模型</p>
+<p>通常来说，如果一个ROC曲线如果能把另外一个完全包住，则说明前者分类器性能更优越。但是如果有交叉，就很难判断孰优孰劣了，这时可通过计算AUC（Area Under Curve）来比较。</p>
+<p>使用AUC评价模型的好处是可以有效减弱不平衡数据集对评测结果的影响。如果一个数据集非常不平衡，比如正类特别多，这时模型会偏向预测正样本，这时FPR会非常高，曲线像（1，0）偏移，导致AUC减小。</p>
+<h2 id="KS曲线"><a href="#KS曲线" class="headerlink" title="KS曲线"></a>KS曲线</h2><p>KS曲线和ROC曲线关系密切。ROC曲线将TPR和FPR画在一条曲线上，KS曲线则是将FPR和TPR画作两条曲线，横轴是阈值$\alpha$。KS值的定义为：</p>
 <script type="math/tex; mode=display">
-\frac{\partial \mathbf x^{\mathrm T} \mathbf A \mathbf x}{\partial \mathbf x} 
-=\mathbf x^{\mathrm T} \frac{\partial \mathbf x ^ {\mathrm T} \mathbf A}{\partial \mathbf x} + \mathbf x ^ {\mathrm T} \mathbf A 
-= \mathbf{x^{\mathrm T}A^{\mathrm T}+x^{\mathrm T}A}
-=\mathbf{x^{\mathrm T}(A+A^{\mathrm T})}</script></li>
-<li><p>$\mathbf{\frac{\partial (Ax+b) ^ {\mathrm T}C(Dx+e)}{\partial x} = (Dx+e)^{\mathrm T}C^{\mathrm T}A+(Ax+b)^{\mathrm T}CD}$</p>
-<p>分母是个标量，分子是个向量，最后结果也是个向量，与$\mathbf x ^ {\mathrm T}$形状相同。</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\frac{\mathbf{\partial (Ax+b) ^ {\mathrm T}C(Dx+e)}}{\partial \mathbf x}
-&=\mathbf{ [C(Dx+e)]^{\mathrm T}\frac{\partial (Ax+b) ^ {\mathrm T}}{\partial x} + (Ax+b)^{\mathrm T}C\frac{\partial (Dx+e)}{\partial x}}\\\
-&= \mathbf{(Dx+e)^{\mathrm T}C^{\mathrm T} \frac{\partial x^{\mathrm T}A^{\mathrm T}}{x}+(Ax+b)^{\mathrm T}CD}\\\
-&=\mathbf{(Dx+e)^{\mathrm T}C^{\mathrm T}A +(Ax+b)^{\mathrm T}CD}
-\end{align}</script></li>
-</ol>
-<h3 id="矩阵的迹求导"><a href="#矩阵的迹求导" class="headerlink" title="矩阵的迹求导"></a>矩阵的迹求导</h3><p>充分利用矩阵迹的性质：</p>
-<ol>
-<li>$tr(A) = tr(A^{\mathrm T})$</li>
-<li>$tr(ABCD)=tr(BCDA)=tr(CDAB)=tr(DABC)$</li>
-<li>$tr(m\mathbf A + n \mathbf B)=mtr(\mathbf A)+n tr(\mathbf B)$</li>
-<li>如果$d\mathbf y = tr(\mathbf Ad \mathbf X)$，则$\frac{d\mathbf y}{d \mathbf X}=\mathbf A $</li>
-</ol>
-<p>例如计算：$\frac{\partial tr(\mathbf {AXBX^{\mathrm T}C})}{\partial \mathbf X}$</p>
-<script type="math/tex; mode=display">
-\begin{align}
- d \mathrm tr (\mathbf{AXBX^{\mathrm T}C})
- &= d \mathrm tr(\mathbf {CAXBX^{\mathrm T}})=\mathrm tr(d(\mathbf{CAX})\mathbf {BX^{\mathrm T}}+\mathbf{CAX}d(\mathbf{BX^{\mathrm T}}))\\\
- &= \mathrm tr(d(\mathbf{CAX})\mathbf {BX^{\mathrm T}})+\mathrm tr(\mathbf{CAX}d(\mathbf{BX^{\mathrm T}}))\\\
- &=\mathrm tr(\mathbf{CA}d(\mathbf X)\mathbf{BX^{\mathrm T}})+\mathrm tr(\mathbf{CAXB}d(\mathbf{X^\mathrm T}))\\\
- &=\mathrm tr(\mathbf{BX^{\mathrm T}CA}d(\mathbf X)) + \mathrm tr(d(\mathbf X)\mathbf{B^{\mathrm T}X^{\mathrm T}A^{\mathrm T}C^{\mathrm T}})\\\
- &=\mathrm tr(\mathbf{BX^{\mathrm T}CA}d(\mathbf X)) +\mathrm tr(\mathbf{B^{\mathrm T}X^{\mathrm T}A^{\mathrm T}C^{\mathrm T}}d(\mathbf X))\\\
- &=\mathrm tr((\mathbf{BX^{\mathrm T}CA} +\mathbf{B^{\mathrm T}X^{\mathrm T}A^{\mathrm T}C^{\mathrm T}})d(\mathbf X))\\\
-\end{align}</script><p>所以：</p>
-<script type="math/tex; mode=display">
-\frac{\partial tr(\mathbf {AXBX^{\mathrm T}C})}{\partial \mathbf X}
-=\mathbf{BX^{\mathrm T}CA} +\mathbf{B^{\mathrm T}X^{\mathrm T}A^{\mathrm T}C^{\mathrm T}}</script><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>知道以上方法基本上机器学习里面关于矩阵求导的问题都可以解决了，如果遇到更复杂的请参考<a href="https://en.wikipedia.org/wiki/Matrix_calculus" target="_blank" rel="noopener">wiki</a></p>
+KS = max(TPR - FPR)</script><p><strong>如果一个分类器性能足够好，两条曲线应该分的足够开，即KS值越大。</strong></p>
 
       
     </div>
@@ -421,9 +403,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数学/" rel="tag">#数学</a>
-          
-            <a href="/tags/矩阵/" rel="tag">#矩阵</a>
+            <a href="/tags/评价指标/" rel="tag">#评价指标</a>
           
         </div>
       
@@ -432,17 +412,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/02/二分查找总结/" rel="next" title="二分查找总结">
-                <i class="fa fa-chevron-left"></i> 二分查找总结
+              <a href="/2018/01/04/Batch-Normalization/" rel="next" title="Batch Normalization">
+                <i class="fa fa-chevron-left"></i> Batch Normalization
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/08/单例模式/" rel="prev" title="单例模式">
-                单例模式 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -468,8 +444,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/03/04/矩阵求导方法/"
-           data-title="矩阵求导方法" data-url="http://rosen.xyz/2017/03/04/矩阵求导方法/">
+      <div class="ds-thread" data-thread-key="2018/02/01/AUC和KS指标/"
+           data-title="AUC和KS指标" data-url="http://rosen.xyz/2018/02/01/AUC和KS指标/">
       </div>
     
   </div>
@@ -571,7 +547,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Layout-Conventions"><span class="nav-number">1.</span> <span class="nav-text">Layout Conventions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#元素级求导"><span class="nav-number">2.</span> <span class="nav-text">元素级求导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#向量对标量"><span class="nav-number">2.1.</span> <span class="nav-text">向量对标量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标量对向量"><span class="nav-number">2.2.</span> <span class="nav-text">标量对向量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#向量对向量"><span class="nav-number">2.3.</span> <span class="nav-text">向量对向量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">2.4.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#公式求导"><span class="nav-number">3.</span> <span class="nav-text">公式求导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#普通公式求导"><span class="nav-number">3.1.</span> <span class="nav-text">普通公式求导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵的迹求导"><span class="nav-number">3.2.</span> <span class="nav-text">矩阵的迹求导</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ROC曲线"><span class="nav-number">1.</span> <span class="nav-text">ROC曲线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KS曲线"><span class="nav-number">2.</span> <span class="nav-text">KS曲线</span></a></li></ol></div>
             
           </div>
         </section>
