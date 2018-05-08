@@ -1,0 +1,895 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Playball:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="最近因为要给学弟们讲课，重读了PRML第四章，把之前没读懂的都弄懂了，收获很大，现做个总结。 分类问题的方法可归结三类：判别公式（Discriminant function），生成模型（Generative model）和判别模型（Discriminative model）。后两者都是在概率框架下对概率分布进行建模，区别在于建模对象的不同，之后再详细讲。使用判别公式就相对比较简单粗暴，就是学习一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PRML笔记——使用判别公式进行线性分类">
+<meta property="og:url" content="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/index.html">
+<meta property="og:site_name" content="Rosen">
+<meta property="og:description" content="最近因为要给学弟们讲课，重读了PRML第四章，把之前没读懂的都弄懂了，收获很大，现做个总结。 分类问题的方法可归结三类：判别公式（Discriminant function），生成模型（Generative model）和判别模型（Discriminative model）。后两者都是在概率框架下对概率分布进行建模，区别在于建模对象的不同，之后再详细讲。使用判别公式就相对比较简单粗暴，就是学习一个">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/二分类分界面.png">
+<meta property="og:image" content="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/多分类分界面-缺陷.png">
+<meta property="og:image" content="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/多分类分界面.png">
+<meta property="og:image" content="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/最小二乘法对噪声敏感.png">
+<meta property="og:image" content="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/最小二乘法在分类问题中假设不合理.png">
+<meta property="og:image" content="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/高斯假设等值线.png">
+<meta property="og:image" content="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/LDA.png">
+<meta property="og:image" content="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/perceptron.png">
+<meta property="og:updated_time" content="2018-05-08T08:36:32.505Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PRML笔记——使用判别公式进行线性分类">
+<meta name="twitter:description" content="最近因为要给学弟们讲课，重读了PRML第四章，把之前没读懂的都弄懂了，收获很大，现做个总结。 分类问题的方法可归结三类：判别公式（Discriminant function），生成模型（Generative model）和判别模型（Discriminative model）。后两者都是在概率框架下对概率分布进行建模，区别在于建模对象的不同，之后再详细讲。使用判别公式就相对比较简单粗暴，就是学习一个">
+<meta name="twitter:image" content="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/二分类分界面.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/"/>
+
+  <title> PRML笔记——使用判别公式进行线性分类 | Rosen </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?1613fa01ed708dc95bd2f373215ba3b4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Rosen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PRML笔记——使用判别公式进行线性分类
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-07T09:09:13+08:00" content="2018-05-07">
+              2018-05-07
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/05/07/PRML笔记——使用判别公式分类/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/05/07/PRML笔记——使用判别公式分类/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/05/07/PRML笔记——使用判别公式分类/" class="leancloud_visitors" data-flag-title="PRML笔记——使用判别公式进行线性分类">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近因为要给学弟们讲课，重读了PRML第四章，把之前没读懂的都弄懂了，收获很大，现做个总结。</p>
+<p>分类问题的方法可归结三类：判别公式（Discriminant function），生成模型（Generative model）和判别模型（Discriminative model）。后两者都是在概率框架下对概率分布进行建模，区别在于建模对象的不同，之后再详细讲。使用判别公式就相对比较简单粗暴，就是学习一个映射函数，直接将样本映射到标签。</p>
+<a id="more"></a>
+<h2 id="分界面"><a href="#分界面" class="headerlink" title="分界面"></a>分界面</h2><h3 id="二分类"><a href="#二分类" class="headerlink" title="二分类"></a>二分类</h3><p>对于二分类问题，判别公式的一般形式为：</p>
+<script type="math/tex; mode=display">
+y(x)=\mathbf{w^{T}x}+ w_0 \tag{1}</script><p>两类之间的分界面为：</p>
+<script type="math/tex; mode=display">
+y(x)=\mathbf{w^{T}x}+ w_0 = 0 \tag{2}</script><p>下图展示了二维平面上的分界面效果及一些性质。</p>
+<div align="center"><img src="二分类分界面.png" width="400"></div>
+
+<p>对于平面中的任意一点$\mathbf{x}$，有</p>
+<script type="math/tex; mode=display">
+\mathbf{x} = \mathbf{x_{\perp} } + r \frac{\mathbf{w}}{||\mathbf{w}||}</script><p>利用(2)，可得打每个点$\mathbf{x}$到分界面的距离:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\mathbf{w^{T}x} =\mathbf{w^{T}x_{\perp}} + r \mathbf{\frac{w^Tw}{||w||}} =\mathbf{w^{T}x_{\perp}} + r \mathbf{||w||} \\
+&y(\mathbf{x}) = \mathbf{w^{T}x} + w_0 =\mathbf{w^{T}x_{\perp}} + w_0 + r \mathbf{||w||} = r \mathbf{||w||} \\
+&r = \frac{y(\mathbf{x})}{\mathbf{||w||}}
+\end{aligned}</script><h3 id="多分类"><a href="#多分类" class="headerlink" title="多分类"></a>多分类</h3><p>对于多分类问题，构建分界面有几种不同方案</p>
+<ol>
+<li>One vs Rest：每类和剩下的所有类作分类，构建$K-1$个分类器</li>
+<li>One vs One：每两类之间构建一个分类器，共$K(K-1)/2$</li>
+<li>构建K个分类器，类似于softmax，每个分类器输出一个得分，将样本预测为得分最高的那一类</li>
+</ol>
+<p><strong>前两种方法都存在一定缺陷</strong>：</p>
+<div align="center"><img src="多分类分界面-缺陷.png" width="600"></div>
+
+<p>上图左是One vs Rest方法，当两个分类器的分类结果是Yes C1，Yes C2时，无法区分是哪一类，即图中的绿色区域。上图右表示One vs One方法，采用投票的方法确定最后的结果，但是当预测结果轮换时（即classifier(C1, C2) -&gt; C2, classifier(C2, C3) -&gt; C3, classifier(C1, C3) -&gt; C1），无法确定样本属于哪一类。</p>
+<p>因以上原因，实际多分类问题中一般采用第3中方式进行多分类。对于K分类问题，其判别公式一般形式为：</p>
+<script type="math/tex; mode=display">
+y_k(\mathbf{x}) = \mathbf{w_{k}^{T}x} + w_{k0} ~~~~~~~k=1, 2,3, \cdots, K  \tag{3}</script><p>任意两类$k,j$之间的分界面为：</p>
+<script type="math/tex; mode=display">
+{(\mathbf{w}_{k} - \mathbf{w}_{j})}^{\mathbf{T}}\mathbf{x} + (w_{k0} - w_{j0}) = 0</script><p>下图展示了分界面效果：</p>
+<div align="center"><img src="多分类分界面.png" width="400"></div>
+
+<h2 id="几种分类方法"><a href="#几种分类方法" class="headerlink" title="几种分类方法"></a>几种分类方法</h2><p>为后文公式书写方便，对于(1)(3)中判别公式采用以下方式简写：</p>
+<script type="math/tex; mode=display">
+y(x)=\mathbf{w^{T}x} \\
+\mathbf{y(x)} = \mathbf{W^{T}x}</script><p>这种方法将偏置当做$\mathbf{w}$中的一维，其对应维中的$\mathbf{x}$取值为1。</p>
+<h3 id="Least-squares"><a href="#Least-squares" class="headerlink" title="Least squares"></a>Least squares</h3><p>一种很容易想到的方法就是用最小二乘法求解多分类问题，像线性回归一样。</p>
+<p>其优化目标是：</p>
+<script type="math/tex; mode=display">
+\min ~~~\frac{1}{2}Tr((XW-T)^T(XW-T)) \tag{4}</script><p>其解为：</p>
+<script type="math/tex; mode=display">
+W = (X^TX)^{-1}X^{T}T</script><p><strong>最小二乘法存在两个缺点</strong>：</p>
+<ol>
+<li>对噪声敏感</li>
+<li>在分类问题上最小二乘法的假设不合理，在很多问题上会失败</li>
+</ol>
+<div align="center"><img src="最小二乘法对噪声敏感.png" width="800"></div>
+
+<p>上图反映了最小二乘法对噪声敏感的问题，在右图中，存在一小撮距离较远的点（右下角蓝色），为了使有这一小撮点到分界面的距离（不是垂直距离，是y-y(x)的距离）尽量小（优化目标），分界面会大幅倾斜。</p>
+<div align="center"><img src="最小二乘法在分类问题中假设不合理.png" width="800"></div>
+
+<p>上图反映了最小二乘法分类失败的情景。理想情况下最优的分界面是右图，但是使用最小二乘法只能得到左图的分界面，原因在于最小二乘法基于高斯假设，即假设模型误差服从高斯分布。在这种情况下$p(t|x)$也是服从高斯分布，概率等值线如下：</p>
+<div align="center"><img src="高斯假设等值线.png" width="400"></div>
+
+<p>其分界面是$p(t=1|x) = p(t=0|x)$，如上图所示。直观上理解，误差服从高斯分布显然也是不合理的，因为类别标签是0、1，不是连续的。</p>
+<h2 id="Fisher’s-Linear-Discriminant（LDA）"><a href="#Fisher’s-Linear-Discriminant（LDA）" class="headerlink" title="Fisher’s Linear Discriminant（LDA）"></a>Fisher’s Linear Discriminant（LDA）</h2><h3 id="二分类-1"><a href="#二分类-1" class="headerlink" title="二分类"></a>二分类</h3><p>线性二分类可看成两步：</p>
+<ol>
+<li>$y(x)=\mathbf{w^{T}x}$将样本$\mathbf{x}$映射到一维</li>
+<li>在一维上分类，$y(x)\geq y_0$属于正类，$y(x)&lt;y_0$负类</li>
+</ol>
+<p>如果要分类的好，一个朴素的想法就是让样本映射到一维空间后可以分得很开。</p>
+<p>假设两类点的中心分别是：</p>
+<script type="math/tex; mode=display">
+\mathbf{m_1} = \frac{1}{N_1}\sum_{n \in C_1} \mathbf{x_n} ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\mathbf{m_2} = \frac{1}{N_2}\sum_{n \in C_2} \mathbf{x_n}</script><p>则投影之后类别中心是：</p>
+<script type="math/tex; mode=display">
+m_k = \mathbf{w}^{T}\mathbf{m_k}</script><p>则优化目标为：</p>
+<script type="math/tex; mode=display">
+\max ~~~(m_2-m_1)^2=\mathbf{w^T(m_2-m_1)} ~~~~s.t.~~ \mathbf{w^Tw}=1 \tag{5}</script><p>使用拉格朗日乘子法：</p>
+<script type="math/tex; mode=display">
+L(\mathbf{w}) =\mathbf{w^T(m_2-m_1)} +\lambda(\mathbf{w^{T}w-1})</script><p>求得:</p>
+<script type="math/tex; mode=display">
+\mathbf{w} \propto (\mathbf{m_2-m_1})</script><div align="center"><img src="LDA.png" width="800"></div>
+
+<p>上面左图反映了投影结果，可以看出，仅考虑类中心的距离会导致投影后样本有很多重叠，原因是样本集的协方差不是对角阵。LDA的不仅考虑了类别之间的距离，也考虑了类内的方差。其优化目标是：</p>
+<script type="math/tex; mode=display">
+\max ~~~ J(\mathbf{w}) = \frac{(m_2 - m_1)^2}{s_1^2 + s_2^{2}} = \mathbf{\frac{w^TS_Bw}{w^TS_ww}} \tag{6}</script><p>其中$s_1, s_2$表示类内方差，定义为：</p>
+<script type="math/tex; mode=display">
+s_k = \sum_{n\in C_k} (y_n - m_k)^2</script><p>$\mathbf{S_B,S_W}$定义为：</p>
+<script type="math/tex; mode=display">
+\mathbf{S_B = (m_2 -m_1)(m_2-m_1)^T} \\
+\mathbf{S_W = \sum_{n \in C_1}(x_n - m_1)(x_n - m_1)^T + \sum_{n \in C_2}(x_n - m_2)(x_n - m_2)^T}</script><p>式(6)对$\mathbf{w}$求导得到：</p>
+<script type="math/tex; mode=display">
+\mathbf{(w^{T}S_Bw)S_Ww=(w^TS_Ww)S_Bw}</script><p>即：</p>
+<script type="math/tex; mode=display">
+\mathbf{w \propto S_W^{-1}(m_2-m_1)}</script><p>当$\mathbf{S_W}$是对角阵并且对角元素都相等的时候(isotropic covariance)，$\mathbf{w \propto (m_2-m_1)}$。</p>
+<p>投影之后，可看做一维空间上的分类问题，通过决策理论选择一个阈值后即可构建一个分类器。</p>
+<h3 id="多分类-1"><a href="#多分类-1" class="headerlink" title="多分类"></a>多分类</h3><p>对于K分类问题，类内方差定义为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\mathbf{S_W} &= \sum_{k = 1}^{K}\mathbf{S}_k \\
+\mathbf{S}_k &= \sum_{n \in C_k}(x_n - \mathbf{m}_k)(x_n - \mathbf{m}_k)^{T} \\
+\mathbf{m}_k &= \frac{1}{N_k}\sum_{n \in C_k}\mathbf{x}_n
+\end{aligned}</script><p>总方差是：</p>
+<script type="math/tex; mode=display">
+\mathbf{S_T= \sum_{n = 1}^{N}(x_n - m)(x_n-m)^{T}} \\
+\mathbf{m} = \frac{1}{N}\sum_{n=1}^{N}\mathbf{x}_n = \frac{1}{N}\sum_{k=1}^{K}N_k\mathbf{m}_k  \tag{7}</script><p>将总方差拆分成两项：</p>
+<script type="math/tex; mode=display">
+\mathbf{S_T =S_W + S_B}</script><p>将其中$\mathbf{S_B}$当做类间方差：</p>
+<script type="math/tex; mode=display">
+\mathbf{S_B} = \sum_{k =1}^{K}N_k\mathbf{(m_k-m)(m_k-m)^{T}} \tag{8}</script><p>得到类内方差和类间方差后通过可构建以下优化目标：</p>
+<script type="math/tex; mode=display">
+\max ~~~ J(\mathbf{W}) = \mathbf{Tr \left\{ (W^TS_WW)^{-1}(W^TS_BW)\right\}} \tag{9}</script><p>该优化目标的解是$\mathbf{S_W^{-1}S_B}$的最大的D个特征值对于的特征向量，D为最后的降维维数。因为(8)由K</p>
+<p>个秩为1的矩阵构成，并且因为(7)，自由度仅为K-1，因此$\mathbf{S_B}$的秩最多为K-1，所以$D\leq K-1$。</p>
+<h2 id="感知机"><a href="#感知机" class="headerlink" title="感知机"></a>感知机</h2><p>感知机采用+1、-1作为类别标签，模型如下：</p>
+<script type="math/tex; mode=display">
+y(\mathbf{x})=f(\mathbf{w^{T}x}) \\
+f(a) = 
+\begin{cases}
++1  ~~~~~~a \geq 0\\ 
+-1  ~~~~~~a < 0
+\end{cases}</script><p>如果采用分错数量作为损失，最后的损失函数曲线是分段常数函数(piecewise constant)，即每一段都是平的，导数为0，无法优化。感知机采用以下方式作为损失函数，这样最后的损失函数为分段线性(piecewise linear)：</p>
+<script type="math/tex; mode=display">
+E(\mathbf{w}) =-\sum_{n \in M}\mathbf{w}^{T}\mathbf{x}_nt_n</script><p>对于分错样本$\mathbf{x}_n$，损失$-\mathbf{w}^{T}\mathbf{x}_nt_n &gt; 0$，对于分对样本，损失为0。</p>
+<p>使用梯度下降法更新，更新方法如下：</p>
+<script type="math/tex; mode=display">
+\mathbf{w}^{\tau+1} = \mathbf{w}^{\tau} - \eta \bigtriangledown E(\mathbf{w}) =\mathbf{w}^{\tau}+\eta \mathbf{x}_nt_n</script><div align="center"><img src="perceptron.png" width="800"></div>
+
+<p>通过上图可以直观理解感知机算法原理。当一个样本$\mathbf{x}_n$分错时，如果是正样本，$\mathbf{w}^{\tau + 1}=\mathbf{w}^{\tau} + \mathbf{x}_n$，如果是负样本，$\mathbf{w}^{\tau + 1}=\mathbf{w}^{\tau} - \mathbf{x}_n$(这里$\eta = 1$)。上图中绿色的圈表示分错了，$\mathbf{w}$加上样本后分界面就会得到纠正。</p>
+<p>感知机算法的好处是其收敛性有保证：<strong>如果数据能够线性可分，感知机算法能保证收敛。</strong>但是，感知机也存在一些缺点。</p>
+<ol>
+<li>即使在线性可分的情况下，感知机的收敛性能够得到保证，但是可能会收敛很慢</li>
+<li>数据是否线性可分无法判断，感知机的优势其实不明显</li>
+<li>不太容易拓展到多分类情况</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/01/AUC和KS指标/" rel="next" title="AUC和KS指标">
+                <i class="fa fa-chevron-left"></i> AUC和KS指标
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/05/07/PRML笔记——使用判别公式分类/"
+           data-title="PRML笔记——使用判别公式进行线性分类" data-url="http://rosen.xyz/2018/05/07/PRML笔记——使用判别公式分类/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/pic.jpg"
+               alt="Rosen" />
+          <p class="site-author-name" itemprop="name">Rosen</p>
+          <p class="site-description motion-element" itemprop="description">好记性不如烂指头</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/rosenx" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#分界面"><span class="nav-number">1.</span> <span class="nav-text">分界面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二分类"><span class="nav-number">1.1.</span> <span class="nav-text">二分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多分类"><span class="nav-number">1.2.</span> <span class="nav-text">多分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#几种分类方法"><span class="nav-number">2.</span> <span class="nav-text">几种分类方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Least-squares"><span class="nav-number">2.1.</span> <span class="nav-text">Least squares</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fisher’s-Linear-Discriminant（LDA）"><span class="nav-number">3.</span> <span class="nav-text">Fisher’s Linear Discriminant（LDA）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二分类-1"><span class="nav-number">3.1.</span> <span class="nav-text">二分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多分类-1"><span class="nav-number">3.2.</span> <span class="nav-text">多分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#感知机"><span class="nav-number">4.</span> <span class="nav-text">感知机</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rosen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"rosen"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("biMv55TLfF7CB6bXSpyftOMv-gzGzoHsz", "h7LA9rv3bMSYpiNy9KSzUgzf");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+</body>
+</html>
