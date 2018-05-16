@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习,梯度下降法,线性模型,逻辑回归,最大似然," />
+  <meta name="keywords" content="PRML,贝叶斯,拉普拉斯近似," />
 
 
 
@@ -88,20 +88,21 @@
 
 
 
-<meta name="description" content="广义线性模型上一篇文章中介绍了线性模型：  y = \theta ^ \mathrm{T} x \tag{1}该模型虽然简单，但却富于变化。例如，假设样例对应的输出在指数上变化，我们可以将输出的对数作为逼近目标得到对数回归模型，即：      \ln{y} = \theta ^ \mathrm{T} x \tag{2}更一般地，考虑单调可微函数 $ f(\cdot) $，令      y = f">
-<meta name="keywords" content="机器学习,梯度下降法,线性模型,逻辑回归,最大似然">
+<meta name="description" content="在之前讲到的方法中，我们假设模型后，会通过最大似然估计或者最大后验概率估计推断出模型的最优参数，然后在该参数条件下使用判别概率分布做决断，即通过$p(C_k|\mathbf{x}, \mathbf{w}^{ML} /  \mathbf{w}^{MAP})$做决断。这种方法实际上是从参数$\mathbf{w}$的分布上取一个最有可能的出现的参数（概率密度最大）作为模型的最终参数，而忽略了其他参数出现">
+<meta name="keywords" content="PRML,贝叶斯,拉普拉斯近似">
 <meta property="og:type" content="article">
-<meta property="og:title" content="广义线性模型与逻辑回归">
-<meta property="og:url" content="http://rosen.xyz/2016/08/07/广义线性模型与逻辑回归/index.html">
+<meta property="og:title" content="拉普拉斯近似与贝叶斯逻辑回归——PRML第四章(3)">
+<meta property="og:url" content="http://rosen.xyz/2018/05/15/拉普拉斯近似与贝叶斯逻辑回归/index.html">
 <meta property="og:site_name" content="Rosen">
-<meta property="og:description" content="广义线性模型上一篇文章中介绍了线性模型：  y = \theta ^ \mathrm{T} x \tag{1}该模型虽然简单，但却富于变化。例如，假设样例对应的输出在指数上变化，我们可以将输出的对数作为逼近目标得到对数回归模型，即：      \ln{y} = \theta ^ \mathrm{T} x \tag{2}更一般地，考虑单调可微函数 $ f(\cdot) $，令      y = f">
+<meta property="og:description" content="在之前讲到的方法中，我们假设模型后，会通过最大似然估计或者最大后验概率估计推断出模型的最优参数，然后在该参数条件下使用判别概率分布做决断，即通过$p(C_k|\mathbf{x}, \mathbf{w}^{ML} /  \mathbf{w}^{MAP})$做决断。这种方法实际上是从参数$\mathbf{w}$的分布上取一个最有可能的出现的参数（概率密度最大）作为模型的最终参数，而忽略了其他参数出现">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://rosen.xyz/2016/08/07/广义线性模型与逻辑回归/sigmoid.png">
-<meta property="og:updated_time" content="2018-01-05T10:35:38.670Z">
+<meta property="og:image" content="http://rosen.xyz/2018/05/15/拉普拉斯近似与贝叶斯逻辑回归/laplace-approximation.png">
+<meta property="og:image" content="http://rosen.xyz/2018/05/15/拉普拉斯近似与贝叶斯逻辑回归/delta-function.png">
+<meta property="og:updated_time" content="2018-05-16T13:35:38.815Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="广义线性模型与逻辑回归">
-<meta name="twitter:description" content="广义线性模型上一篇文章中介绍了线性模型：  y = \theta ^ \mathrm{T} x \tag{1}该模型虽然简单，但却富于变化。例如，假设样例对应的输出在指数上变化，我们可以将输出的对数作为逼近目标得到对数回归模型，即：      \ln{y} = \theta ^ \mathrm{T} x \tag{2}更一般地，考虑单调可微函数 $ f(\cdot) $，令      y = f">
-<meta name="twitter:image" content="http://rosen.xyz/2016/08/07/广义线性模型与逻辑回归/sigmoid.png">
+<meta name="twitter:title" content="拉普拉斯近似与贝叶斯逻辑回归——PRML第四章(3)">
+<meta name="twitter:description" content="在之前讲到的方法中，我们假设模型后，会通过最大似然估计或者最大后验概率估计推断出模型的最优参数，然后在该参数条件下使用判别概率分布做决断，即通过$p(C_k|\mathbf{x}, \mathbf{w}^{ML} /  \mathbf{w}^{MAP})$做决断。这种方法实际上是从参数$\mathbf{w}$的分布上取一个最有可能的出现的参数（概率密度最大）作为模型的最终参数，而忽略了其他参数出现">
+<meta name="twitter:image" content="http://rosen.xyz/2018/05/15/拉普拉斯近似与贝叶斯逻辑回归/laplace-approximation.png">
 
 
 
@@ -122,9 +123,9 @@
 
 
 
-  <link rel="canonical" href="http://rosen.xyz/2016/08/07/广义线性模型与逻辑回归/"/>
+  <link rel="canonical" href="http://rosen.xyz/2018/05/15/拉普拉斯近似与贝叶斯逻辑回归/"/>
 
-  <title> 广义线性模型与逻辑回归 | Rosen </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> 拉普拉斯近似与贝叶斯逻辑回归——PRML第四章(3) | Rosen </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -264,7 +265,7 @@
             
             
               
-                广义线性模型与逻辑回归
+                拉普拉斯近似与贝叶斯逻辑回归——PRML第四章(3)
               
             
           </h1>
@@ -276,8 +277,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-07T16:48:54+08:00" content="2016-08-07">
-              2016-08-07
+            <time itemprop="dateCreated" datetime="2018-05-15T18:50:13+08:00" content="2018-05-15">
+              2018-05-15
             </time>
           </span>
 
@@ -290,8 +291,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
                   </a>
                 </span>
 
@@ -306,8 +307,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/07/广义线性模型与逻辑回归/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/07/广义线性模型与逻辑回归/" itemprop="commentsCount"></span>
+                <a href="/2018/05/15/拉普拉斯近似与贝叶斯逻辑回归/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/05/15/拉普拉斯近似与贝叶斯逻辑回归/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -317,7 +318,7 @@
 
           
           
-             <span id="/2016/08/07/广义线性模型与逻辑回归/" class="leancloud_visitors" data-flag-title="广义线性模型与逻辑回归">
+             <span id="/2018/05/15/拉普拉斯近似与贝叶斯逻辑回归/" class="leancloud_visitors" data-flag-title="拉普拉斯近似与贝叶斯逻辑回归——PRML第四章(3)">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -339,78 +340,94 @@
       
 
       
-        <h3 id="广义线性模型"><a href="#广义线性模型" class="headerlink" title="广义线性模型"></a>广义线性模型</h3><p>上一篇文章中介绍了线性模型：</p>
-<script type="math/tex; mode=display">
-y = \theta ^ \mathrm{T} x \tag{1}</script><p>该模型虽然简单，但却富于变化。例如，假设样例对应的输出在指数上变化，我们可以将输出的对数作为逼近目标得到对数回归模型，即：</p>
-<script type="math/tex; mode=display">
-    \ln{y} = \theta ^ \mathrm{T} x \tag{2}</script><p>更一般地，考虑<strong>单调可微</strong>函数 $ f(\cdot) $，令</p>
-<script type="math/tex; mode=display">
-    y = f ^ {-1} (\theta ^ \mathrm{T} x) \tag{3}</script><p>即可得到<strong>广义线性模型</strong>。其中 $ f(\cdot) $ 的作用是联系模型输出与样例真实标记，称之为联系函数。</p>
+        <p>在之前讲到的方法中，我们假设模型后，会通过最大似然估计或者最大后验概率估计推断出模型的最优参数，然后在该参数条件下使用判别概率分布做决断，即通过$p(C_k|\mathbf{x}, \mathbf{w}^{ML} /  \mathbf{w}^{MAP})$做决断。这种方法实际上是从参数$\mathbf{w}$的分布上取一个最有可能的出现的参数（概率密度最大）作为模型的最终参数，而忽略了其他参数出现的可能性，不可避免产生过拟合问题，贝叶斯方法就是为了解决这一问题。</p>
 <a id="more"></a>
-<h3 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h3><p>根据上面理论，如果能找到一个函数使得线性回归产生的预测值 $ z = \theta ^ {T} x $ 映射到真实标记 $ \lbrace 0, 1 \rbrace $ 中，即可将线性模型用于分类任务。最理想的是单位阶跃函数：</p>
+<h2 id="贝叶斯方法"><a href="#贝叶斯方法" class="headerlink" title="贝叶斯方法"></a>贝叶斯方法</h2><p>在之前的方法中，决策阶段只考虑可能性最大的参数，即$\mathbf{w}^{ML}$或$\mathbf{w}^{MAP}$，贝叶斯方法则考虑所有可能的参数。之前的方法通过判别概率来进行决策$p(C_k|\mathbf{x},\mathbf{w})$，贝叶斯方法通过<strong>预测分布（Predictive distribution）</strong>来决策，即</p>
 <script type="math/tex; mode=display">
-    y =
-    \begin{cases}
-    0,  & \text{ $ z $ < 0 } \\\
-    0.5, & \text{ $ z $ = 0}  \\\
-    1, & \text{ $ z $ > 0} \\\
-    \end{cases}
-    \tag{4}</script><p>但是该函数不可导，不能作为式（3）中的 $ f ^ {-1} (\cdot) $。Sigmoid函数是一个常用的替代方案：</p>
+p(C_k|\mathbf{x},\mathbf{t}) = \int p(C_k|\mathbf{x},\mathbf{w})p(\mathbf{w|t})d \mathbf{w} \tag{1}</script><p>其中$\mathbf{t}$指整个数据集。</p>
+<p>上式可以看成一个加权平均，对于每种可能的参数$\mathbf{w}$，其判别的结果$p(C_k|\mathbf{x},\mathbf{w})$需乘上参数$\mathbf{w}$出现的概率。这很像一种集成学习，可以有效提高模型的泛化能力。</p>
+<h2 id="拉普拉斯近似"><a href="#拉普拉斯近似" class="headerlink" title="拉普拉斯近似"></a>拉普拉斯近似</h2><p>在介绍贝叶斯逻辑回归之前，先讲一个预备知识——拉普拉斯近似。</p>
+<p>很多时候我们需要求一个概率分布的积分，但是这个概率分布的积分很难求甚至不可求怎么办？一个直接的方法是用一个比较好求的相似的概率分布去代替这个概率分布。拉普拉斯近似就是用一种用高斯分布去近似其他分布的方法。</p>
+<p>假设需要近似的概率分布为：</p>
 <script type="math/tex; mode=display">
-    g(z) = \frac {1} {1 + e ^ {-z}} \tag{5}</script><p>该函数将$ z $映射到 $ (0, 1) $ 之间，$ g(0) = 0.5 $，其函数如下图所示：</p>
-<p><div align="center">
-    <img src="./sigmoid.png" alt="sigmoid函数" align="center">
-</div><br>可认为$ g(z) $的值为样本属于正类的概率，则若 $ z &gt; 0.5$，则判定该样本为正类，$ z &lt; 0.5 $判定该样本为负类。将 $ g(z) $ 作为 $f ^ {-1}$ 代入式（3）中得到假设函数：</p>
+p(z) = \frac{1}{Z}f(z)</script><p>其中$Z$是归一化系数。</p>
+<p>在用高斯分布去近似原始分布时，高斯分布均值的位置应该在原始分布概率密度取最大值的位置，即$z_0$：</p>
 <script type="math/tex; mode=display">
-    h(x) = \frac {1} {1 + e ^ {-\theta ^ \mathrm{T} x}} \tag{6}</script><p>该模型便称之为<strong>逻辑回归</strong>。剩下的问题就是求解 $ \theta $了。</p>
-<h3 id="最大似然"><a href="#最大似然" class="headerlink" title="最大似然"></a>最大似然</h3><p>上节提到逻辑回归的模型输出 $ h(x) $ 可看作样本 $x$ 属于正类的后验概率，那么属于负类的后验概率自然是 $ 1 - h(x) $，用概率的形式可表示为：<br>
-$$
-\begin{align}
-    &p(y = 1 | x; \theta) = h(x)   \\\
-    &p(y = 0 | x; \theta) = 1 - h(x)
-\end{align}\tag{7}
-$$
-于是求解 $ \theta $ 相当于参数估计，可用最大似然法。
+\left.\frac{df(z)}{dz} \right|_{z=z_0} = 0</script><p>同时，由于对高斯分布取$\ln$可以得到二次项，可以对原始分布取$\ln$再做Taylor展开：</p>
+<script type="math/tex; mode=display">
+\ln f(z) \simeq \ln f(z_0)-\frac{1}{2}A(z-z_0)^2</script><p>其中一次项由于$z_0$是驻点等于0，</p>
+<script type="math/tex; mode=display">
+A = \left. -\frac{d^2}{dz^2}\ln f(z) \right|_{z=z_0}</script><p>由此可得到：</p>
+<script type="math/tex; mode=display">
+f(z) \simeq f(z_0)\exp{\left\{ -\frac{A}{2}(z-z_0)^2 \right\}}</script><p>即高斯分布的均值为$z_0$，准确率为$A$，则近似的高斯分布为：</p>
+<script type="math/tex; mode=display">
+q(z) = \left( \frac{A}{2\pi} \right) ^ {1/2} \exp{\left\{ -\frac{A}{2}(z-z_0)^2 \right\}} \tag{2}</script><p>值得注意的是，应该要求$f(z)​$在$z_0​$处取得最大值，$A​$需要大于0。</p>
+<p>对于高维情况，使用同样的处理方法得到近似的高斯分布如下：</p>
+<script type="math/tex; mode=display">
+q(\mathbf{z}) = \frac{|\mathbf{A}|^{1/2}}{(2\pi)^{M/2}}\exp{ \left\{ -\frac{1}{2} \mathbf{(z-z_0)^{T}A(z-z_0)}\right\} } \tag{3}</script><p>$\mathbf{A}$需要是正定的。</p>
+<p>拉普拉斯的近似效果如下：</p>
+<div align="center"><img src="laplace-approximation.png" width="400"></div>
 
-给定数据集 $ \lbrace (x_ i, y_ i) \rbrace{i = 1} ^ {m}$，似然函数为：
-$$
-    l(\theta) = \sum_ {i = 1} ^ {m} \ln{p(y_ i|x_ i; \theta)} \tag{8}
-$$
-其中：
-$$
-    \ln{p(y_ i|x_ i; \theta)} = 
-    \begin{cases}
-    \ln{p(y_ i = 1| x_ i; \theta)} = \ln{h(x ^ {i})}, &\text{ $ y_ i $ = 1 } \\
-    \ln{p(y_ i = 0| x_ i; \theta)} = \ln{(1 - h(x ^ {i}))}, &\text{ $ y_ i $ = 0 }
-    \end{cases}
-    \tag {9}
-$$
-根据式（9），式（8）可重写为：
-$$
-    l(\theta) = 
-    \sum_ {i = 1} ^ {m} y_ i \ln{h(x ^ {i})} + (1 - y_ i) \ln {(1 - h(x ^ {i}))} \tag{10}
-$$
-问题即变成：
-$$
-    \max_ {\theta} l(\theta) \tag{11}
-$$
-令 $ J(\theta) = -l(\theta) $，式（11）等同于：
-$$
-    \min_ {\theta} J(\theta) = 
-    \sum_ {i = 1} ^ {m} -y_ i \ln{h(x ^ {i})} - (1 - y_ i) \ln {(1 - h(x ^ {i}))} \tag{12}
-$$
-因为式（12）中的两项对于每个 $ i $ 不能同时取到，并且 $ -\ln{x} $ 与 $ -\ln{(1 - x)} $均为单调函数，故 $ J(\theta) $ 为凸函数（凸函数的线性叠加也是凸函数），可用梯度下降法求得最优解。
+<h2 id="贝叶斯逻辑回归"><a href="#贝叶斯逻辑回归" class="headerlink" title="贝叶斯逻辑回归"></a>贝叶斯逻辑回归</h2><p>对于二分类逻辑回归模型，其预测分布为：</p>
+<script type="math/tex; mode=display">
+p(C_1|\mathbf{x},\mathbf{t}) = \int p(C_1|\mathbf{x}, \mathbf{w})p(\mathbf{w}|\mathbf{t})d\mathbf{w} = \int \sigma(\mathbf{w^Tx})p(\mathbf{w}|\mathbf{t})d\mathbf{w} \tag{4}</script><p>因为后验概率$p(\mathbf{w|t})$不好求，我们可以用高斯分布去近似。</p>
+<script type="math/tex; mode=display">
+p(\mathbf{w|t}) \propto p(\mathbf{w})p(\mathbf{t|w})</script><p>假设先验概率$p(\mathbf{w}) = N(\mathbf{w|m_0,S_0})$，则</p>
+<script type="math/tex; mode=display">
+\ln{p(\mathbf{w|t})} = -\frac{1}{2}\mathbf{(w-w_0)^TS_0^{-1}(w-w_0)} + \sum_{1}^{N} \left\{ t_n \ln y_n + (1-t_n) \ln (1 -y_n) \right\}+ const</script><p>其中$yn = \sigma(\mathbf{w^Tx})$，上式求一次导等于0的解正好是最大后验概率估计的解$\mathbf{w}_{MAP}$，对上式求二次导得到</p>
+<script type="math/tex; mode=display">
+\mathbf{S}_N=-\mathbf{\bigtriangledown\bigtriangledown} \ln p(\mathbf{w|t}) = \mathbf{S_0}^{-1}+ \sum_{n=1}^{N}y_n(1-y_n)\mathbf{xx^T}</script><p>因此近似的高斯分布为：</p>
+<script type="math/tex; mode=display">
+q(\mathbf{w})=N(\mathbf{w}|\mathbf{w}_{MAP},\mathbf{S}_N^{-1})</script><p>则式（4）近似等于</p>
+<script type="math/tex; mode=display">
+p(C_1|\mathbf{x},\mathbf{t})  = \int \sigma(\mathbf{w^Tx})p(\mathbf{w}|\mathbf{t})d\mathbf{w}  =\int \sigma(\mathbf{w^Tx})q(\mathbf{w})d\mathbf{w} \tag{5}</script><p>为了方便计算，引入Dirac delta function，也叫奇点分布。这是一个极端的概率分布，其所有的概率密度都集中在一个点上，其分布图如下：</p>
+<div align="center"><img src="delta-function.png" width="400"></div>
 
-其过程为：
-$$
-\begin{align}
-    &\text{Repeat until convergence}\lbrace\\
-    &\qquad \theta_ j = \theta_ j - \alpha \sum_ {i = 1} ^ {m} (h(x^{i}) - y ^ {i}) x_ {j} ^ {i} 
-    &\qquad(j = 0,1,2,\cdots,n) \\
-    &\rbrace\\
-\end{align}
-$$
-</p>
+<p>奇点分布可看成一种<strong>极端的高斯分布</strong>，其有如下性质：</p>
+<script type="math/tex; mode=display">
+\int f(x)\delta(x)dx=f(0)</script><p>根据以上性质有(使用换元$u = a-\mathbf{w^Tx}$)：</p>
+<script type="math/tex; mode=display">
+\sigma(\mathbf{w^Tx}) = \int \delta(a-\mathbf{w^Tx})\sigma(a)da</script><p>则</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\int \sigma(\mathbf{w^Tx})q(\mathbf{w})d\mathbf{w}
+& = \int \int \delta(a-\mathbf{w^Tx})\sigma(a)\text{d}a q(\mathbf{w}) \text{d}\mathbf{w} \\
+&= \int \sigma(a)\int \delta(a-\mathbf{w^Tx}) q(\mathbf{w}) \text{d}\mathbf{w}\text{d}a  \\
+&= \int \sigma(a)p(a)\text{d}a 
+\end{aligned}</script><p>其中$p(a) = \int \delta(a-\mathbf{w^Tx}) q(\mathbf{w}) \text{d}\mathbf{w}​$。</p>
+<p>可以推断出$p(a)$是高斯分布，有两种解释：</p>
+<ol>
+<li>因Dirac delta function可也看成一个高斯分布，$q(\mathbf{w})$也是高斯分布，高斯分布的边缘概率是高斯分布</li>
+<li>因Dirac delta function只在0处有值，其他地方均为0，$\delta(a-\mathbf{w^Tx})$可以看成对$\mathbf{w}$做了线性约束，$p(a)$可看成从联合概率密度$q(\mathbf{w})$中积掉了一部分，也是求边缘概率，所以也是高斯分布。（这一点是书上的解释，尚未理解透彻）</li>
+</ol>
+<p>既然知道$p(a)$是高斯分布，只要把均值方差求出来分布就出来了：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\mu_a = E(a) = \int p(a)a \text{d}a 
+&= \int \int \delta(a-\mathbf{w^Tx}) q(\mathbf{w}) \text{d}\mathbf{w}  a \text{d}a  \\
+& = \int \int \delta(a-\mathbf{w^Tx})a \text{d}a~ q(\mathbf{w}) \text{d}\mathbf{w}   \\
+& = \int \mathbf{w^Tx}~ q(\mathbf{w}) \text{d}\mathbf{w}  = \mathbf{w_{MAP}^Tx}
+\end{aligned}</script><script type="math/tex; mode=display">
+\sigma_a^2 = \text{var}(a) =\int p(a)\lbrace a^2-E(a)^2 \rbrace = \int q(\mathbf{w}) \lbrace (\mathbf{w^Tx})^2-\mathbf{w_{MAP}^Tx})^2\rbrace = \mathbf{x^TS_Nx}</script><p>所以式（5）等于：</p>
+<script type="math/tex; mode=display">
+p(C_1|\mathbf{t}) = \int \sigma(a)p(a)\text{d}a  = \int \sigma(a)N(a|\mu_a,\sigma_a^2) \text{d}a \tag{6}</script><p>虽然已经做了很多，但是式(6)依然不太好求，需要做进一步近似。之前讲过，Inverse probit function的形状跟sigmoid的形状十分相似，正好是高斯分布，用在式(6)中正合适。最终：</p>
+<script type="math/tex; mode=display">
+p(C_1|\mathbf{t})  = \int \sigma(a)N(a|\mu_a,\sigma_a^2) \text{d}a \simeq \int \Phi(\lambda a) N(a|\mu_a,\sigma_a^2) \text{d}a = \Phi(\frac{\mu_a}{(\lambda^{-2}+\sigma_a^2)^{1/2}}) = \sigma\left( k(\sigma_a^2)\mu_a \right)</script><p>其中$k(\sigma_a^2) = (1+\lambda^2\sigma_a^2)$，$\lambda^2$取$\pi/8$。</p>
+<h2 id="贝叶斯模型评价"><a href="#贝叶斯模型评价" class="headerlink" title="贝叶斯模型评价"></a>贝叶斯模型评价</h2><p>讲了这么多模型，那什么样的模型比较好呢？在贝叶斯方法中，采用Model Evidence来评价模型好坏：</p>
+<script type="math/tex; mode=display">
+p(D|M_i) = \int p(D|\theta,M_i)p(\theta |M_i)  \text{d}\theta</script><p>其中$M_i$表示假设的模型，如逻辑回归、假设$p(\mathbf{x}|C_k)$为高斯分布的生成模型等，$p(\theta|M_i)$表示在模型假设$M_i$下模型中参数$\theta$的先验，$p(D|\theta,M_i)$表示在参数$\theta$的情况下模型拟合数据集的能力。Model Evidence实际上评估的是模型在参数任取的情况下的平均性能。由于模型假设$M_i$相同，为保持公式的简介，后面公式中都省略$M_i$:</p>
+<script type="math/tex; mode=display">
+p(D) = \int p(D|\theta)p(\theta )  \text{d}\theta \tag{7}</script><p>因为不知道$p(D|\theta)p(\theta)$的形式，可以用拉普拉斯近似。</p>
+<p>对于概率分布$f(\mathbf{z})$，其积分为：</p>
+<script type="math/tex; mode=display">
+Z = \int f(\mathbf{z})  \text{d} \mathbf{z} \simeq f(\mathbf{z}_0) \int \exp \left\{-\frac{1}{2} \mathbf{(z-z_0)^TA(z-z_0)}\right\} = f(\mathbf{z_0}) \frac{(2\pi)^{M/2}}{|\mathbf{A}|^{1/2}}</script><p>将$p(D)$看做$Z$，$p(D|\theta)p(\theta)$看做$f(\mathbf{z})$，有：</p>
+<script type="math/tex; mode=display">
+p(D) = p(D|\theta_{MAP})p(\theta_{MAP}) + \frac{(2\pi)^{M/2}}{|\mathbf{A}|^{1/2}}</script><p>对两边取$\ln$之后有：</p>
+<script type="math/tex; mode=display">
+\ln p(D) = \ln p(D|\theta_{MAP}) + \ln p(\theta_{MAP}) + \frac{M}{2}\ln(2\pi)-\frac{1}{2}\ln|\mathbf{A}| \tag{8}</script><p>第一项表示该模型对数据的拟合程度，后三项是对该模型的惩罚。</p>
+<p>如果先验分布比较宽，也就是不做过多假设，并且$\mathbf{A}$是满秩的，则式(8)可以下式近似：</p>
+<script type="math/tex; mode=display">
+\ln p(D) \simeq \ln p(D|\theta_{MAP})-\frac{1}{2}M \ln N \tag{9}</script><p>上式也称之为BIC准则(Bayesian Information Criterion)，其中$M$表示模型参数个数，$N$表示数据量。从BIC可以看出，一个好的模型不仅应该对数据拟合非常好，而且参数也应尽量少。</p>
 
       
     </div>
@@ -433,15 +450,11 @@ $$
       
         <div class="post-tags">
           
-            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+            <a href="/tags/PRML/" rel="tag">#PRML</a>
           
-            <a href="/tags/梯度下降法/" rel="tag">#梯度下降法</a>
+            <a href="/tags/贝叶斯/" rel="tag">#贝叶斯</a>
           
-            <a href="/tags/线性模型/" rel="tag">#线性模型</a>
-          
-            <a href="/tags/逻辑回归/" rel="tag">#逻辑回归</a>
-          
-            <a href="/tags/最大似然/" rel="tag">#最大似然</a>
+            <a href="/tags/拉普拉斯近似/" rel="tag">#拉普拉斯近似</a>
           
         </div>
       
@@ -450,17 +463,13 @@ $$
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/31/从线性回归谈机器学习的几个重要问题/" rel="next" title="从线性回归谈机器学习的几个重要问题">
-                <i class="fa fa-chevron-left"></i> 从线性回归谈机器学习的几个重要问题
+              <a href="/2018/05/08/使用生成模型和判别模型进行线性分类——PRML第四章/" rel="next" title="使用生成模型和判别模型进行线性分类——PRML第四章(2)">
+                <i class="fa fa-chevron-left"></i> 使用生成模型和判别模型进行线性分类——PRML第四章(2)
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/14/《代码整洁之道》读书笔记（一）/" rel="prev" title="《代码整洁之道》读书笔记（一）——命名与函数">
-                《代码整洁之道》读书笔记（一）——命名与函数 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -486,8 +495,8 @@ $$
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/08/07/广义线性模型与逻辑回归/"
-           data-title="广义线性模型与逻辑回归" data-url="http://rosen.xyz/2016/08/07/广义线性模型与逻辑回归/">
+      <div class="ds-thread" data-thread-key="2018/05/15/拉普拉斯近似与贝叶斯逻辑回归/"
+           data-title="拉普拉斯近似与贝叶斯逻辑回归——PRML第四章(3)" data-url="http://rosen.xyz/2018/05/15/拉普拉斯近似与贝叶斯逻辑回归/">
       </div>
     
   </div>
@@ -589,7 +598,7 @@ $$
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#广义线性模型"><span class="nav-number">1.</span> <span class="nav-text">广义线性模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逻辑回归"><span class="nav-number">2.</span> <span class="nav-text">逻辑回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最大似然"><span class="nav-number">3.</span> <span class="nav-text">最大似然</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#贝叶斯方法"><span class="nav-number">1.</span> <span class="nav-text">贝叶斯方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拉普拉斯近似"><span class="nav-number">2.</span> <span class="nav-text">拉普拉斯近似</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#贝叶斯逻辑回归"><span class="nav-number">3.</span> <span class="nav-text">贝叶斯逻辑回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#贝叶斯模型评价"><span class="nav-number">4.</span> <span class="nav-text">贝叶斯模型评价</span></a></li></ol></div>
             
           </div>
         </section>
